@@ -3,6 +3,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using System.Diagnostics;
+using OpenTK.Mathematics;
 
 namespace CG_Kuerteil
 {
@@ -12,16 +13,10 @@ namespace CG_Kuerteil
 
         private readonly float[] _vertices = {
              // positions        // colors
-            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+             0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
             -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-            0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+             0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
         };
-
-        //private readonly uint[] _indices = {
-        //    0, 1, 3,   // first triangle
-        //    1, 2, 3    // second triangle
-        //};
-
 
         private int _vertexBufferObject;
 
@@ -29,9 +24,13 @@ namespace CG_Kuerteil
 
         private Shader _shader;
 
-        private int _elementBufferObject;
-
         private Stopwatch _timer = new Stopwatch();
+
+        private Camera _camera;
+
+        private bool _firstMove = true;
+
+        private Vector2 _lastPos;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -43,8 +42,8 @@ namespace CG_Kuerteil
         protected override void OnLoad()
         {
             Logger.Log("Load Window");
-            
-            base.OnLoad(); 
+
+            base.OnLoad();
 
             // set BackgroundColor
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -56,53 +55,47 @@ namespace CG_Kuerteil
             // set buffer data
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            // describe data
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
-
-            // Enable variable 0 in the shader.
-            GL.EnableVertexAttribArray(0);
-
-            // param 2
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-            GL.EnableVertexAttribArray(1);
-
-            //_elementBufferObject = GL.GenBuffer();
-            //GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            //GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
             // load shader
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 
             // enable the shader.
             _shader.Use();
+
+            // describe data
+            int vertexLocation = _shader.GetAttribLocation("aPosition");
+            GL.EnableVertexAttribArray(vertexLocation);
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+
+            int color = _shader.GetAttribLocation("aColor");
+            GL.EnableVertexAttribArray(color);
+            GL.VertexAttribPointer(color, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+
+            GL.Enable(EnableCap.DepthTest);
+
+            _camera = new Camera(new(0, 0, 1f), Size.X / (float)Size.Y);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
 
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             // Bind the shader
             _shader.Use();
+
+            Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_timer.Elapsed.TotalMilliseconds / 10));
+            _shader.SetMatrix4("model", model);
+            _shader.SetMatrix4("view", _camera.GetViewMatrix());
+            _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
             GL.BindVertexArray(_vertexArrayObject);
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
 
             SwapBuffers();
-        }
-
-        protected override void OnUpdateFrame(FrameEventArgs e)
-        {
-            if (KeyboardState.IsKeyDown(Keys.Escape))
-            {
-                Logger.Log("Exit");
-
-                Close();
-            }
-            base.OnUpdateFrame(e);
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -125,6 +118,57 @@ namespace CG_Kuerteil
             GL.DeleteProgram(_shader.Handle);
 
             base.OnUnload();
+        }
+
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            base.OnUpdateFrame(e);
+
+            if (!IsFocused) // Check to see if the window is focused
+                return;
+
+            if (KeyboardState.IsKeyDown(Keys.Escape))
+                System.Environment.Exit(1);
+
+            const float sensitivity = 0.2f;
+
+            // Get the mouse state
+            var mouse = MouseState;
+
+            if (_firstMove) // This bool variable is initially set to true.
+            {
+                _lastPos = new Vector2(mouse.X, mouse.Y);
+                _firstMove = false;
+            }
+            else
+            {
+
+                float deltaX = 0;
+                float deltaY = 0;
+
+                if (!mouse.IsButtonPressed(MouseButton.Left) && mouse.IsButtonDown(MouseButton.Left))
+                {
+                    // Calculate the offset of the mouse position
+                    deltaX = mouse.X - _lastPos.X;
+                    deltaY = mouse.Y - _lastPos.Y;
+                }
+
+                _lastPos = new Vector2(mouse.X, mouse.Y);
+
+                // Apply the camera pitch and yaw (we clamp the pitch in the camera class)
+                _camera.Yaw += deltaX * sensitivity;
+                _camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
+            }
+
+        }
+
+        // In the mouse wheel function, we manage all the zooming of the camera.
+        // This is simply done by changing the FOV of the camera.
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            base.OnMouseWheel(e);
+
+            _camera.Fov -= e.OffsetY;
         }
     }
 }

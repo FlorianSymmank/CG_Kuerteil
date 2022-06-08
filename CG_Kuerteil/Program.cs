@@ -24,7 +24,6 @@ namespace LearnOpenTK
             {
                 window.Run();
             }
-
         }
     }
 }
