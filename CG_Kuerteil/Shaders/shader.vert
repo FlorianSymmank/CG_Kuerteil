@@ -16,9 +16,9 @@
 // Then, the keyword "vec3" means this is a vector with 3 floats inside.
 
 layout (location = 0) in vec3 aPosition;
-layout (location = 1) in vec3 aColor;
+// layout (location = 1) in vec3 aColor;
 
-out vec3 myColor; 
+// out vec3 myColor; 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
@@ -26,5 +26,5 @@ uniform mat4 projection;
 void main(void)
 {
     gl_Position = vec4(aPosition, 1.0) * model * view * projection;
-    myColor = aColor;
+    // myColor = aColor;
 }

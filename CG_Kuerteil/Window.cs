@@ -7,15 +7,51 @@ using OpenTK.Mathematics;
 
 namespace CG_Kuerteil
 {
-
     public class Window : GameWindow
     {
-
         private readonly float[] _vertices = {
-             // positions        // colors
-             0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-            -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-             0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+             // positions        
+             -0.5f, -0.5f, -0.5f,
+              0.5f, -0.5f, -0.5f,
+              0.5f,  0.5f, -0.5f,
+              0.5f,  0.5f, -0.5f,
+             -0.5f,  0.5f, -0.5f,
+             -0.5f, -0.5f, -0.5f,
+
+             -0.5f, -0.5f,  0.5f,
+              0.5f, -0.5f,  0.5f,
+              0.5f,  0.5f,  0.5f,
+              0.5f,  0.5f,  0.5f,
+             -0.5f,  0.5f,  0.5f,
+             -0.5f, -0.5f,  0.5f,
+
+             -0.5f,  0.5f,  0.5f,
+             -0.5f,  0.5f, -0.5f,
+             -0.5f, -0.5f, -0.5f,
+             -0.5f, -0.5f, -0.5f,
+             -0.5f, -0.5f,  0.5f,
+             -0.5f,  0.5f,  0.5f,
+
+              0.5f,  0.5f,  0.5f,
+              0.5f,  0.5f, -0.5f,
+              0.5f, -0.5f, -0.5f,
+              0.5f, -0.5f, -0.5f,
+              0.5f, -0.5f,  0.5f,
+              0.5f,  0.5f,  0.5f,
+
+             -0.5f, -0.5f, -0.5f,
+              0.5f, -0.5f, -0.5f,
+              0.5f, -0.5f,  0.5f,
+              0.5f, -0.5f,  0.5f,
+             -0.5f, -0.5f,  0.5f,
+             -0.5f, -0.5f, -0.5f,
+
+             -0.5f,  0.5f, -0.5f,
+              0.5f,  0.5f, -0.5f,
+              0.5f,  0.5f,  0.5f,
+              0.5f,  0.5f,  0.5f,
+             -0.5f,  0.5f,  0.5f,
+             -0.5f,  0.5f, -0.5f,
         };
 
         private int _vertexBufferObject;
@@ -31,6 +67,10 @@ namespace CG_Kuerteil
         private bool _firstMove = true;
 
         private Vector2 _lastPos;
+
+        //private Matrix4 _model = Matrix4.Identity;
+
+        private Container _container = new Container();
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -67,15 +107,15 @@ namespace CG_Kuerteil
             // describe data
             int vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 
-            int color = _shader.GetAttribLocation("aColor");
-            GL.EnableVertexAttribArray(color);
-            GL.VertexAttribPointer(color, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+            //int color = _shader.GetAttribLocation("aColor");
+            //GL.EnableVertexAttribArray(color);
+            //GL.VertexAttribPointer(color, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
 
             GL.Enable(EnableCap.DepthTest);
 
-            _camera = new Camera(new(0, 0, 1f), Size.X / (float)Size.Y);
+            _camera = new Camera(new(0, 0, 2f), Size.X / (float)Size.Y);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -87,13 +127,19 @@ namespace CG_Kuerteil
             // Bind the shader
             _shader.Use();
 
-            Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_timer.Elapsed.TotalMilliseconds / 10));
-            _shader.SetMatrix4("model", model);
-            _shader.SetMatrix4("view", _camera.GetViewMatrix());
-            _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            for (int i = 0; i < _container.DrawBars.Count; i++)
+            {
+                DrawBar drawbar = _container.DrawBars[i];
 
-            GL.BindVertexArray(_vertexArrayObject);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+                Matrix4 model = Matrix4.CreateScale(drawbar.Scale) * Matrix4.CreateTranslation(drawbar.Pos) * _container.model;
+                _shader.SetVector4("instanceColor", (Vector4)drawbar.Bar.Color);
+                _shader.SetMatrix4("model", model);
+                _shader.SetMatrix4("view", _camera.GetViewMatrix());
+                _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+                GL.BindVertexArray(_vertexArrayObject);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+            }
 
             SwapBuffers();
         }
@@ -124,13 +170,16 @@ namespace CG_Kuerteil
         {
             base.OnUpdateFrame(e);
 
-            if (!IsFocused) // Check to see if the window is focused
+            if (!IsFocused)
                 return;
 
             if (KeyboardState.IsKeyDown(Keys.Escape))
+            {
+                Logger.Log("Exit");
                 System.Environment.Exit(1);
+            }
 
-            const float sensitivity = 0.2f;
+            const float sensitivity = 0.005f;
 
             // Get the mouse state
             var mouse = MouseState;
@@ -140,26 +189,18 @@ namespace CG_Kuerteil
                 _lastPos = new Vector2(mouse.X, mouse.Y);
                 _firstMove = false;
             }
-            else
+            else if (!mouse.IsButtonPressed(MouseButton.Left) && mouse.IsButtonDown(MouseButton.Left))
             {
+                var angleY = MathHelper.Clamp(mouse.Y - _lastPos.Y, -89f, 89f) * sensitivity;
+                var angleX = MathHelper.Clamp(mouse.X - _lastPos.X, -89f, 89f) * sensitivity;
 
-                float deltaX = 0;
-                float deltaY = 0;
+                _container.model *= Matrix4.CreateRotationX(angleY);
+                _container.model *= Matrix4.CreateRotationY(angleX);
 
-                if (!mouse.IsButtonPressed(MouseButton.Left) && mouse.IsButtonDown(MouseButton.Left))
-                {
-                    // Calculate the offset of the mouse position
-                    deltaX = mouse.X - _lastPos.X;
-                    deltaY = mouse.Y - _lastPos.Y;
-                }
-
-                _lastPos = new Vector2(mouse.X, mouse.Y);
-
-                // Apply the camera pitch and yaw (we clamp the pitch in the camera class)
-                _camera.Yaw += deltaX * sensitivity;
-                _camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
+                Console.WriteLine(_container.model.ToString());
             }
 
+            _lastPos = new Vector2(mouse.X, mouse.Y);
         }
 
         // In the mouse wheel function, we manage all the zooming of the camera.
