@@ -9,7 +9,7 @@ namespace CG_Kuerteil
 {
     public class Window : GameWindow
     {
-        private readonly float[] _vertices = {
+        private readonly float[] _CubeVertices = {
              // positions        
              -0.5f, -0.5f, -0.5f,
               0.5f, -0.5f, -0.5f,
@@ -54,9 +54,9 @@ namespace CG_Kuerteil
              -0.5f,  0.5f, -0.5f,
         };
 
-        private int _vertexBufferObject;
+        private int _CubeVertexBuffer;
 
-        private int _vertexArrayObject;
+        private int _CubeVertexArrayID;
 
         private Shader _shader;
 
@@ -70,7 +70,7 @@ namespace CG_Kuerteil
 
         //private Matrix4 _model = Matrix4.Identity;
 
-        private Container _container = new Container();
+        private Container _container;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -89,14 +89,15 @@ namespace CG_Kuerteil
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             // create and bind a vertex buffer
-            _vertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+            _CubeVertexBuffer = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _CubeVertexBuffer);
 
             // set buffer data
-            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, _CubeVertices.Length * sizeof(float), _CubeVertices, BufferUsageHint.StaticDraw);
 
-            _vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(_vertexArrayObject);
+            _CubeVertexArrayID = GL.GenVertexArray();
+            GL.BindVertexArray(_CubeVertexArrayID);
+            Register.GetRegister().RegisterArrayID("cube", _CubeVertexArrayID);
 
             // load shader
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
@@ -116,6 +117,9 @@ namespace CG_Kuerteil
             GL.Enable(EnableCap.DepthTest);
 
             _camera = new Camera(new(0, 0, 2f), Size.X / (float)Size.Y);
+            Register.GetRegister().RegisterCamera(_camera);
+
+            _container = new Container();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -127,19 +131,9 @@ namespace CG_Kuerteil
             // Bind the shader
             _shader.Use();
 
-            for (int i = 0; i < _container.DrawBars.Count; i++)
-            {
-                DrawBar drawbar = _container.DrawBars[i];
-
-                Matrix4 model = Matrix4.CreateScale(drawbar.Scale) * Matrix4.CreateTranslation(drawbar.Pos) * _container.model;
-                _shader.SetVector4("instanceColor", (Vector4)drawbar.Bar.Color);
-                _shader.SetMatrix4("model", model);
-                _shader.SetMatrix4("view", _camera.GetViewMatrix());
-                _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-
-                GL.BindVertexArray(_vertexArrayObject);
-                GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
-            }
+            for (int i = 0; i < _container.length; i++)
+                _container[i].render(_shader);
+            
 
             SwapBuffers();
         }
@@ -158,8 +152,8 @@ namespace CG_Kuerteil
             GL.UseProgram(0);
 
             // Delete all the resources.
-            GL.DeleteBuffer(_vertexBufferObject);
-            GL.DeleteVertexArray(_vertexArrayObject);
+            GL.DeleteBuffer(_CubeVertexBuffer);
+            GL.DeleteVertexArray(_CubeVertexArrayID);
 
             GL.DeleteProgram(_shader.Handle);
 

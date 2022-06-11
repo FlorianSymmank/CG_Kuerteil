@@ -9,8 +9,9 @@ namespace CG_Kuerteil
 {
     public class Container
     {
-        private List<Bar> bars = new List<Bar>() { new Bar(Color4.Firebrick, 19),new Bar(Color4.Firebrick, 19),new Bar(Color4.Firebrick, 19),new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Beige, 4), new Bar(Color4.Firebrick, 19), new Bar(Color4.Green, -25) };
-        public List<DrawBar> DrawBars = new List<DrawBar>();
+        private List<Bar> bars = new List<Bar>() { new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Beige, 4), new Bar(Color4.Firebrick, 19), new Bar(Color4.Green, -25) };
+        public List<Base3DObject> Base3DObjects = new List<Base3DObject>();
+
         public Container()
         {
             float space = 2f / bars.Count;
@@ -28,15 +29,28 @@ namespace CG_Kuerteil
                 Vector3 scale = new(width, bar.Value / range, width);
                 Vector3 pos = new(offsetSpace, scale.Y / 2, 0);
 
-                DrawBars.Add(new DrawBar(bar, pos, scale));
                 offsetSpace += space;
+
+                Base3DObject base3DObject = new("cube", this)
+                {
+                    Color = bar.Color,
+                    Scale = scale,
+                    Position = pos,
+                };
+
+                Base3DObjects.Add(base3DObject);
             }
         }
 
         public Matrix4 model = Matrix4.Identity;
-        private float normalize(float input, float min, float max)
+
+        public Base3DObject this[int index]
         {
-            return (input - min) / (max - min);
+            get => Base3DObjects[index];
+            set => Base3DObjects[index] = value;
         }
+
+        public int length => Base3DObjects.Count;
+
     }
 }
