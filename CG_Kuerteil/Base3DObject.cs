@@ -29,7 +29,7 @@ namespace CG_Kuerteil
         public void render(Shader shader)
         {
             Matrix4 model = Matrix4.CreateScale(Scale) * Matrix4.CreateTranslation(position) * _parent.model;
-            shader.SetVector4("instanceColor", (Vector4)color);
+            shader.SetVector4("objectColor", (Vector4)color);          
             shader.SetMatrix4("model", model);
             shader.SetMatrix4("view", Register.GetRegister().GetCamera().GetViewMatrix());
             shader.SetMatrix4("projection", Register.GetRegister().GetCamera().GetProjectionMatrix());

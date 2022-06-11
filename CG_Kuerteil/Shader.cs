@@ -184,7 +184,7 @@ namespace CG_Kuerteil
         }
 
         /// <summary>
-        /// Set a uniform Vector3 on this shader.
+        /// Set a uniform Vector4 on this shader.
         /// </summary>
         /// <param name="name">The name of the uniform</param>
         /// <param name="data">The data to set</param>

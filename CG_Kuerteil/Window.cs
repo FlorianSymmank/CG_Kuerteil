@@ -7,51 +7,52 @@ using OpenTK.Mathematics;
 
 namespace CG_Kuerteil
 {
+    // Tutorial https://opentk.net/learn/index.html
     public class Window : GameWindow
     {
         private readonly float[] _CubeVertices = {
-             // positions        
-             -0.5f, -0.5f, -0.5f,
-              0.5f, -0.5f, -0.5f,
-              0.5f,  0.5f, -0.5f,
-              0.5f,  0.5f, -0.5f,
-             -0.5f,  0.5f, -0.5f,
-             -0.5f, -0.5f, -0.5f,
+            // Position           Normal
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, // Front face
+             0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-             -0.5f, -0.5f,  0.5f,
-              0.5f, -0.5f,  0.5f,
-              0.5f,  0.5f,  0.5f,
-              0.5f,  0.5f,  0.5f,
-             -0.5f,  0.5f,  0.5f,
-             -0.5f, -0.5f,  0.5f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, // Back face
+             0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-             -0.5f,  0.5f,  0.5f,
-             -0.5f,  0.5f, -0.5f,
-             -0.5f, -0.5f, -0.5f,
-             -0.5f, -0.5f, -0.5f,
-             -0.5f, -0.5f,  0.5f,
-             -0.5f,  0.5f,  0.5f,
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, // Left face
+            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-              0.5f,  0.5f,  0.5f,
-              0.5f,  0.5f, -0.5f,
-              0.5f, -0.5f, -0.5f,
-              0.5f, -0.5f, -0.5f,
-              0.5f, -0.5f,  0.5f,
-              0.5f,  0.5f,  0.5f,
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, // Right face
+             0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+             0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-             -0.5f, -0.5f, -0.5f,
-              0.5f, -0.5f, -0.5f,
-              0.5f, -0.5f,  0.5f,
-              0.5f, -0.5f,  0.5f,
-             -0.5f, -0.5f,  0.5f,
-             -0.5f, -0.5f, -0.5f,
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, // Bottom face
+             0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-             -0.5f,  0.5f, -0.5f,
-              0.5f,  0.5f, -0.5f,
-              0.5f,  0.5f,  0.5f,
-              0.5f,  0.5f,  0.5f,
-             -0.5f,  0.5f,  0.5f,
-             -0.5f,  0.5f, -0.5f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, // Top face
+             0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
         };
 
         private int _CubeVertexBuffer;
@@ -60,15 +61,11 @@ namespace CG_Kuerteil
 
         private Shader _shader;
 
-        private Stopwatch _timer = new Stopwatch();
-
         private Camera _camera;
 
         private bool _firstMove = true;
 
         private Vector2 _lastPos;
-
-        //private Matrix4 _model = Matrix4.Identity;
 
         private Container _container;
 
@@ -76,7 +73,6 @@ namespace CG_Kuerteil
             : base(gameWindowSettings, nativeWindowSettings)
         {
             Logger.Log("Create Window");
-            _timer.Start();
         }
 
         protected override void OnLoad()
@@ -108,11 +104,13 @@ namespace CG_Kuerteil
             // describe data
             int vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
-            //int color = _shader.GetAttribLocation("aColor");
-            //GL.EnableVertexAttribArray(color);
-            //GL.VertexAttribPointer(color, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+            // We now need to define the layout of the normal so the shader can use it
+            var normalLocation = _shader.GetAttribLocation("aNormal");
+            GL.EnableVertexAttribArray(normalLocation);
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+
 
             GL.Enable(EnableCap.DepthTest);
 
@@ -120,7 +118,14 @@ namespace CG_Kuerteil
             Register.GetRegister().RegisterCamera(_camera);
 
             _container = new Container();
+
+            // setup static white lighting
+            Vector3 _lightPos = new Vector3(0, 3, 15f);
+            _shader.SetVector3("lightPos", _lightPos);
+            _shader.SetVector3("viewPos", _camera.Position);
+            _shader.SetVector4("lightColor", (Vector4)Color4.White);
         }
+
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -133,7 +138,6 @@ namespace CG_Kuerteil
 
             for (int i = 0; i < _container.length; i++)
                 _container[i].render(_shader);
-            
 
             SwapBuffers();
         }
@@ -191,7 +195,7 @@ namespace CG_Kuerteil
                 _container.model *= Matrix4.CreateRotationX(angleY);
                 _container.model *= Matrix4.CreateRotationY(angleX);
 
-                Console.WriteLine(_container.model.ToString());
+                //Console.WriteLine(_container.model.ToString());
             }
 
             _lastPos = new Vector2(mouse.X, mouse.Y);
@@ -202,7 +206,6 @@ namespace CG_Kuerteil
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);
-
             _camera.Fov -= e.OffsetY;
         }
     }

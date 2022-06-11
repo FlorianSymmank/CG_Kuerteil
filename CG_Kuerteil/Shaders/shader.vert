@@ -15,16 +15,19 @@
 // Next, the keyword "in" defines this as an input variable.
 // Then, the keyword "vec3" means this is a vector with 3 floats inside.
 
-layout (location = 0) in vec3 aPosition;
-// layout (location = 1) in vec3 aColor;
+out vec3 Normal;
+out vec3 FragPos;
 
-// out vec3 myColor; 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+in vec3 aPosition;
+in vec3 aNormal;
+
 void main(void)
 {
     gl_Position = vec4(aPosition, 1.0) * model * view * projection;
-    // myColor = aColor;
+    FragPos = vec3(model * vec4(aPosition, 1.0));
+    Normal = aNormal * mat3(transpose(inverse(model))); // nicht zu empfehlen, sehr kostenintensiv
 }
