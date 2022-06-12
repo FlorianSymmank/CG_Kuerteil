@@ -3,6 +3,8 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using OpenTK.Mathematics;
+
 
 namespace CG_Kuerteil
 {
@@ -112,8 +114,8 @@ namespace CG_Kuerteil
             }
             else if (!mouse.IsButtonPressed(MouseButton.Left) && mouse.IsButtonDown(MouseButton.Left))
             {
-                var angleY = MathHelper.Clamp(mouse.Y - _lastPos.Y, -89f, 89f) * sensitivity;
-                var angleX = MathHelper.Clamp(mouse.X - _lastPos.X, -89f, 89f) * sensitivity;
+                var angleY = OpenTK.Mathematics.MathHelper.Clamp(mouse.Y - _lastPos.Y, -89f, 89f) * sensitivity;
+                var angleX = OpenTK.Mathematics.MathHelper.Clamp(mouse.X - _lastPos.X, -89f, 89f) * sensitivity;
 
                 container.model *= Matrix4.CreateRotationX(angleY);
                 container.model *= Matrix4.CreateRotationY(angleX);

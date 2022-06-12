@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static OpenTK.Mathematics.MathHelper;
 
 namespace CG_Kuerteil
 {
@@ -20,10 +21,10 @@ namespace CG_Kuerteil
         private float _pitch;
 
         // Rotation around the Y axis (radians)
-        private float _yaw = -MathHelper.PiOver2; // Without this, you would be started rotated 90 degrees right.
+        private float _yaw = -PiOver2; // Without this, you would be started rotated 90 degrees right.
 
         // The field of view of the camera (radians)
-        private float _fov = MathHelper.PiOver2;
+        private float _fov = PiOver2;
 
         public Camera(Vector3 position, float aspectRatio)
         {
@@ -46,14 +47,14 @@ namespace CG_Kuerteil
         // We convert from degrees to radians as soon as the property is set to improve performance.
         public float Pitch
         {
-            get => MathHelper.RadiansToDegrees(_pitch);
+            get => RadiansToDegrees(_pitch);
             set
             {
                 // We clamp the pitch value between -89 and 89 to prevent the camera from going upside down, and a bunch
                 // of weird "bugs" when you are using euler angles for rotation.
                 // If you want to read more about this you can try researching a topic called gimbal lock
-                var angle = MathHelper.Clamp(value, -89f, 89f);
-                _pitch = MathHelper.DegreesToRadians(angle);
+                var angle = Clamp(value, -89f, 89f);
+                _pitch = DegreesToRadians(angle);
                 UpdateVectors();
             }
         }
@@ -61,10 +62,10 @@ namespace CG_Kuerteil
         // We convert from degrees to radians as soon as the property is set to improve performance.
         public float Yaw
         {
-            get => MathHelper.RadiansToDegrees(_yaw);
+            get => RadiansToDegrees(_yaw);
             set
             {
-                _yaw = MathHelper.DegreesToRadians(value);
+                _yaw = DegreesToRadians(value);
                 UpdateVectors();
             }
         }
@@ -75,11 +76,11 @@ namespace CG_Kuerteil
         // We convert from degrees to radians as soon as the property is set to improve performance.
         public float Fov
         {
-            get => MathHelper.RadiansToDegrees(_fov);
+            get => RadiansToDegrees(_fov);
             set
             {
-                var angle = MathHelper.Clamp(value, 1f, 90f);
-                _fov = MathHelper.DegreesToRadians(angle);
+                var angle = Clamp(value, 1f, 90f);
+                _fov = DegreesToRadians(angle);
             }
         }
 
