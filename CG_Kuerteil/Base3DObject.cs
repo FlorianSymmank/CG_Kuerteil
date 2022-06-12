@@ -1,38 +1,41 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CG_Kuerteil
 {
-    public class Base3DObject
+    public abstract class Base3DObject
     {
-        private readonly int vertexArrayID;
-        private Vector3 scale;
-        private Vector3 position;
+        protected int vertexArrayID;
         private Color4 color;
-        private readonly Container _parent;
+        private Vector3 position;
+        private Vector3 scale;
+        private Vector3 rotation;
+        protected Container? _parent;
+        protected Shader _shader;
 
-        public Base3DObject(string name, Container parent)
+        public Base3DObject(Shader shader)
         {
-            vertexArrayID = Register.GetRegister().GetArrayID(name);
-            _parent = parent;
+            _shader = shader;
         }
 
         public Vector3 Position { get => position; set => position = value; }
         public Vector3 Scale { get => scale; set => scale = value; }
+        public Vector3 Rotation { get => rotation; set => rotation = value; }
         public Color4 Color { get => color; set => color = value; }
 
-        public void render(Shader shader)
+        public virtual void Render()
         {
-            Matrix4 model = Matrix4.CreateScale(Scale) * Matrix4.CreateTranslation(position) * _parent.model;
-            shader.SetVector4("objectColor", (Vector4)color);          
-            shader.SetMatrix4("model", model);
-            shader.SetMatrix4("view", Register.GetRegister().GetCamera().GetViewMatrix());
-            shader.SetMatrix4("projection", Register.GetRegister().GetCamera().GetProjectionMatrix());
+            Matrix4 parentMat;
+            if (_parent != null)
+                parentMat = _parent.model;
+            else
+                parentMat = Matrix4.Identity;
+
+            Matrix4 model = Matrix4.CreateScale(scale) * Matrix4.CreateTranslation(position) * parentMat;
+            _shader.SetVector4("objectColor", (Vector4)color);
+            _shader.SetMatrix4("model", model);
+            _shader.SetMatrix4("view", Register.GetRegister().GetCamera().GetViewMatrix());
+            _shader.SetMatrix4("projection", Register.GetRegister().GetCamera().GetProjectionMatrix());
 
             GL.BindVertexArray(vertexArrayID);
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
