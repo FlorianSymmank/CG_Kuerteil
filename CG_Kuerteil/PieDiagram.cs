@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK.Mathematics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,12 @@ namespace CG_Kuerteil
     {
         public PieDiagram(Shader shader) : base(shader)
         {
-            var (id, count) = Slice.createSlice(17, shader);
-            Console.WriteLine(id);
-            Base3DObjects.Add(new Slice(this, shader, id, count));
+            Slice s = new Slice(this, shader, 17)
+            {
+                Color = Color4.BlueViolet,
+            };
+
+            Base3DObjects.Add(s);
         }
     }
 }

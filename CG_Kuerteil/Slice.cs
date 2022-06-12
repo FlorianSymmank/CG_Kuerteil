@@ -1,17 +1,15 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static CG_Kuerteil.MathHelper;
 
 namespace CG_Kuerteil
 {
     public class Slice : Base3DObject
     {
-        public Slice(Container parent, Shader shader, int vertexArrayID, int vertexCount) : base(shader)
+        public Slice(Container parent, Shader shader, int angle) : base(shader)
         {
+            CreateSlice(angle, out int vertexArrayID, out int vertexCount);
+
             this._parent = parent;
             this.vertexCount = vertexCount;
             this.vertexArrayID = vertexArrayID;
@@ -22,51 +20,184 @@ namespace CG_Kuerteil
             Color = Color4.White;
         }
 
-        public static (int id, int count) createSlice(int angle, Shader shader)
+        private static Dictionary<int, (int id, int count)> SliceMap = new();
+
+        private int offsetID = 0;
+        private int OffsetID => offsetID++;
+        private void CreateSlice(int angle, out int vertexArrayID, out int vertexCount)
         {
-            //              //angle*frag*(vert+norm)
-            int vertexCount = angle * 3 * (3 + 3); // one vert = 3 positions(x,y,z), one frag(3 verts) per angle
-            Console.WriteLine(3 * 3 * angle);
-            float[] sliceVertices = new float[vertexCount];
-            int offset = 3*(3+3); // 3 verts pro frag, 3 coords und 3 normals pro vert
-            float dist = 1;
-            for (int i = 0; i < angle; i++)
+            if (SliceMap.ContainsKey(angle))
             {
-                // center
-                sliceVertices[i * offset] = 0f; // x
-                sliceVertices[i * offset + 1] = 0f; // y 
-                sliceVertices[i * offset + 2] = 0f; // z
-
-                // center normal
-                sliceVertices[i * offset + 3] = 0f; // x
-                sliceVertices[i * offset + 4] = 0f; // y 
-                sliceVertices[i * offset + 5] = 1f; // z
-
-                // angle
-                sliceVertices[i * offset + 6] = X(i, dist); // x
-                sliceVertices[i * offset + 7] = Y(i, dist); // y 
-                sliceVertices[i * offset + 8] = 0f; // z
-
-                // angle normal
-                sliceVertices[i * offset + 9] = 0f; // x
-                sliceVertices[i * offset + 10] = 0f; // y 
-                sliceVertices[i * offset + 11] = 1f; // z
-
-                // angle + 1
-                sliceVertices[i * offset + 12] = X(i + 1, dist); // x
-                sliceVertices[i * offset + 13] = Y(i + 1, dist); // y 
-                sliceVertices[i * offset + 14] = 0f; // z
-
-                // angle + 1 normal
-                sliceVertices[i * offset + 15] = 0f; // x
-                sliceVertices[i * offset + 16] = 0f; // y 
-                sliceVertices[i * offset + 17] = 1f; // z
+                var value = SliceMap[angle];
+                vertexArrayID = value.id;
+                vertexCount = value.count;
+                return;
             }
 
-            return (Register(sliceVertices, shader), vertexCount);
+            int indexesF = 18; // Front points
+            int indexesB = 18; // Back  points
+            int indexesR = 2 * 18; // right side
+
+            int offset = indexesF + indexesB + indexesR;
+            int vertices = angle * offset;
+
+            float[] sliceVertices = new float[vertices];
+            float radius = 1;
+            float height = .1f;
+
+            Vector2 center = Vector2.Zero;
+            Vector2 normal = Vector2.Zero;
+            Vector2 v = Vector2.Zero;
+
+            for (int i = 0; i < angle; i++)
+            {
+                // Front Face
+                // center
+                sliceVertices[i * offset + OffsetID] = 0f; // X
+                sliceVertices[i * offset + OffsetID] = 0f; // Y 
+                sliceVertices[i * offset + OffsetID] = height; // z
+
+                // center normal            
+                sliceVertices[i * offset + OffsetID] = 0f; // X
+                sliceVertices[i * offset + OffsetID] = 0f; // Y 
+                sliceVertices[i * offset + OffsetID] = 1f; // z
+
+                // angle
+                sliceVertices[i * offset + OffsetID] = CircleX(i, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = height; // z
+
+                // angle normal
+                sliceVertices[i * offset + OffsetID] = 0f; // X
+                sliceVertices[i * offset + OffsetID] = 0f; // Y 
+                sliceVertices[i * offset + OffsetID] = 1f; // z
+
+                // angle + 1
+                sliceVertices[i * offset + OffsetID] = CircleX(i + 1, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i + 1, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = height; // z
+
+                // angle + 1 normal
+                sliceVertices[i * offset + OffsetID] = 0f; // X
+                sliceVertices[i * offset + OffsetID] = 0f; // Y 
+                sliceVertices[i * offset + OffsetID] = 1f; // z
+
+
+
+                // Back Face
+                // center
+                sliceVertices[i * offset + OffsetID] = 0f; // X
+                sliceVertices[i * offset + OffsetID] = 0f; // Y 
+                sliceVertices[i * offset + OffsetID] = -height; // z
+
+                // center normal            
+                sliceVertices[i * offset + OffsetID] = 0f; // X
+                sliceVertices[i * offset + OffsetID] = 0f; // Y 
+                sliceVertices[i * offset + OffsetID] = -1f; // z
+
+                // angle
+                sliceVertices[i * offset + OffsetID] = CircleX(i, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = -height; // z
+
+                // angle normal
+                sliceVertices[i * offset + OffsetID] = 0f; // X
+                sliceVertices[i * offset + OffsetID] = 0f; // Y 
+                sliceVertices[i * offset + OffsetID] = -1f; // z
+
+                // angle + 1
+                sliceVertices[i * offset + OffsetID] = CircleX(i + 1, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i + 1, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = -height; // z
+
+                // angle + 1 normal
+                sliceVertices[i * offset + OffsetID] = 0f; // X
+                sliceVertices[i * offset + OffsetID] = 0f; // Y 
+                sliceVertices[i * offset + OffsetID] = -1f; // z
+
+
+
+                // Right Face 1
+                // vertex
+                sliceVertices[i * offset + OffsetID] = CircleX(i, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = height; // z
+
+                // normal
+                v = new Vector2(CircleX(i, radius), CircleY(i, radius));
+                normal = v - center;
+                sliceVertices[i * offset + OffsetID] = normal.X; // X
+                sliceVertices[i * offset + OffsetID] = normal.Y; // Y 
+                sliceVertices[i * offset + OffsetID] = 0f; // z
+
+                // vertex
+                sliceVertices[i * offset + OffsetID] = CircleX(i, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = -height; // z
+
+                // normal
+                sliceVertices[i * offset + OffsetID] = normal.X; // X
+                sliceVertices[i * offset + OffsetID] = normal.Y; // Y 
+                sliceVertices[i * offset + OffsetID] = 0f; // z
+
+                // vertex
+                sliceVertices[i * offset + OffsetID] = CircleX(i + 1f, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i + 1f, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = -height; // z
+
+                // normal
+                v = new Vector2(CircleX(i + 1f, radius), CircleY(i + 1f, radius));
+                normal = v - center;
+                sliceVertices[i * offset + OffsetID] = normal.X; // X
+                sliceVertices[i * offset + OffsetID] = normal.Y; // Y 
+                sliceVertices[i * offset + OffsetID] = 0f; // z
+
+
+                // Right Face 2
+                // vertex
+                sliceVertices[i * offset + OffsetID] = CircleX(i + 1f, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i + 1f, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = -height; // z
+
+                // normal            
+                sliceVertices[i * offset + OffsetID] = normal.X; // X
+                sliceVertices[i * offset + OffsetID] = normal.Y; // Y 
+                sliceVertices[i * offset + OffsetID] = 0f; // z
+
+                // vertex
+                sliceVertices[i * offset + OffsetID] = CircleX(i + 1, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i + 1, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = height; // z
+
+                // normal
+                v = new Vector2(CircleX(i + 1f, radius), CircleY(i + 1f, radius));
+                normal = v - center;
+                sliceVertices[i * offset + OffsetID] = normal.X; // X
+                sliceVertices[i * offset + OffsetID] = normal.Y; // Y 
+                sliceVertices[i * offset + OffsetID] = 0f; // z
+
+                // vertex
+                sliceVertices[i * offset + OffsetID] = CircleX(i + 0f, radius); // X
+                sliceVertices[i * offset + OffsetID] = CircleY(i + 0f, radius); // Y 
+                sliceVertices[i * offset + OffsetID] = height; // z
+
+                //normal
+                v = new Vector2(CircleX(i, radius), CircleY(i, radius));
+                normal = v - center;
+                sliceVertices[i * offset + OffsetID] = normal.X; // X
+                sliceVertices[i * offset + OffsetID] = normal.Y; // Y 
+                sliceVertices[i * offset + OffsetID] = 0f; // z
+
+                offsetID = 0;
+            }
+
+            vertexArrayID = Register(sliceVertices);
+            vertexCount = vertices;
+
+            SliceMap.Add(angle, (vertexArrayID, vertexCount));
         }
 
-        private static int Register(float[] vertices, Shader shader)
+        private int Register(float[] vertices)
         {
             int vertexBuffer = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
@@ -78,58 +209,16 @@ namespace CG_Kuerteil
             GL.BindVertexArray(vertexArrayID);
 
             // describe data
-            int vertexLocation = shader.GetAttribLocation("aPosition");
+            int vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
-            // We now need to define the layout of the normal so the shader can use it
-            var normalLocation = shader.GetAttribLocation("aNormal");
+            // We now need to define the laCircleYout of the normal so the shader can use it
+            var normalLocation = _shader.GetAttribLocation("aNormal");
             GL.EnableVertexAttribArray(normalLocation);
             GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
 
             return vertexArrayID;
         }
-
-        public static float X(double angle, float dist = 1)
-        {
-            return dist * (float)Math.Cos(AngleToRad(angle));
-        }
-
-        public static float Y(double angle, float dist = 1)
-        {
-            return dist * (float)Math.Sin(AngleToRad(angle));
-        }
-
-        public static double AngleToRad(double angle)
-        {
-            return (Math.PI / 180) * angle;
-        }
-
-        /*
-         _CubeVertexBuffer = GL.GenBuffer();
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _CubeVertexBuffer);
-
-                // set buffer data
-                GL.BufferData(BufferTarget.ArrayBuffer, _CubeVertices.Length * sizeof(float), _CubeVertices, BufferUsageHint.StaticDraw);
-
-                _CubeVertexArrayID = GL.GenVertexArray();
-                GL.BindVertexArray(_CubeVertexArrayID);
-
-                // describe data
-                int vertexLocation = _shader.GetAttribLocation("aPosition");
-                GL.EnableVertexAttribArray(vertexLocation);
-                GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
-
-                // We now need to define the layout of the normal so the shader can use it
-                var normalLocation = _shader.GetAttribLocation("aNormal");
-                GL.EnableVertexAttribArray(normalLocation);
-                GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-            }
-            vertexCount = 36; // 3 per fragment; 2 frags per side
-
-            vertexArrayID = _CubeVertexArrayID;
-            _parent = parent;
-         
-         */
     }
 }
