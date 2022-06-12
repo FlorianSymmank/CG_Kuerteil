@@ -26,10 +26,6 @@ namespace CG_Kuerteil
 
         public virtual void Render()
         {
-            Logger.Log("Render id: " + vertexArrayID);
-            Logger.Log("vertexCount: " + vertexCount);
-
-
             Matrix4 parentMat;
             if (_parent != null)
                 parentMat = _parent.model;
