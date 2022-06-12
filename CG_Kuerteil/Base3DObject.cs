@@ -12,6 +12,7 @@ namespace CG_Kuerteil
         private Vector3 rotation;
         protected Container? _parent;
         protected Shader _shader;
+        protected int vertexCount = 0;
 
         public Base3DObject(Shader shader)
         {
@@ -25,6 +26,10 @@ namespace CG_Kuerteil
 
         public virtual void Render()
         {
+            Logger.Log("Render id: " + vertexArrayID);
+            Logger.Log("vertexCount: " + vertexCount);
+
+
             Matrix4 parentMat;
             if (_parent != null)
                 parentMat = _parent.model;
@@ -38,7 +43,7 @@ namespace CG_Kuerteil
             _shader.SetMatrix4("projection", Register.GetRegister().GetCamera().GetProjectionMatrix());
 
             GL.BindVertexArray(vertexArrayID);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, vertexCount);
         }
     }
 }

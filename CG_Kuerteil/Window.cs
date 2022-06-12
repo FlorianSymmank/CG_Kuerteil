@@ -17,7 +17,7 @@ namespace CG_Kuerteil
 
         private Vector2 _lastPos;
 
-        private Container barDiagramm;
+        private Container container;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -45,7 +45,7 @@ namespace CG_Kuerteil
             _camera = new Camera(new(0, 0, 2f), Size.X / (float)Size.Y);
             Register.GetRegister().RegisterCamera(_camera);
 
-            barDiagramm = new BarDiagramm(_shader);
+            container = new PieDiagram(_shader);
 
             Light light = new(new Vector3(0, 3, 15f), _shader, _camera, Color4.White);
         }
@@ -60,7 +60,7 @@ namespace CG_Kuerteil
             // Bind the shader
             _shader.Use();
 
-            barDiagramm.Render();
+            container.Render();
 
             SwapBuffers();
         }
@@ -115,23 +115,23 @@ namespace CG_Kuerteil
                 var angleY = MathHelper.Clamp(mouse.Y - _lastPos.Y, -89f, 89f) * sensitivity;
                 var angleX = MathHelper.Clamp(mouse.X - _lastPos.X, -89f, 89f) * sensitivity;
 
-                barDiagramm.model *= Matrix4.CreateRotationX(angleY);
-                barDiagramm.model *= Matrix4.CreateRotationY(angleX);
+                container.model *= Matrix4.CreateRotationX(angleY);
+                container.model *= Matrix4.CreateRotationY(angleX);
             }
             _lastPos = new Vector2(mouse.X, mouse.Y);
 
 
             if (KeyboardState.IsKeyDown(Keys.Up))
-                barDiagramm.model *= Matrix4.CreateRotationX(-sensitivity);
+                container.model *= Matrix4.CreateRotationX(-sensitivity);
 
             if (KeyboardState.IsKeyDown(Keys.Down))
-                barDiagramm.model *= Matrix4.CreateRotationX(sensitivity);
+                container.model *= Matrix4.CreateRotationX(sensitivity);
 
             if (KeyboardState.IsKeyDown(Keys.Left))
-                barDiagramm.model *= Matrix4.CreateRotationY(-sensitivity);
+                container.model *= Matrix4.CreateRotationY(-sensitivity);
 
             if (KeyboardState.IsKeyDown(Keys.Right))
-                barDiagramm.model *= Matrix4.CreateRotationY(sensitivity);
+                container.model *= Matrix4.CreateRotationY(sensitivity);
 
         }
 

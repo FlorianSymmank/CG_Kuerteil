@@ -3,11 +3,11 @@
 
 namespace CG_Kuerteil
 {
-    public class BarDiagramm : Container
+    public class BarDiagram : Container
     {
         private List<Bar> bars = new() { new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Beige, 4), new Bar(Color4.Firebrick, 19), new Bar(Color4.Green, -25) };
 
-        public BarDiagramm(Shader shader) : base(shader)
+        public BarDiagram(Shader shader) : base(shader)
         {
             float space = 2f / bars.Count;
             float start = space / 2 - 1;

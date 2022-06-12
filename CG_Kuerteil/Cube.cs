@@ -67,7 +67,6 @@ namespace CG_Kuerteil
 
                 _CubeVertexArrayID = GL.GenVertexArray();
                 GL.BindVertexArray(_CubeVertexArrayID);
-                //Register.GetRegister().RegisterArrayID("cube", _CubeVertexArrayID);
 
                 // describe data
                 int vertexLocation = _shader.GetAttribLocation("aPosition");
@@ -79,6 +78,7 @@ namespace CG_Kuerteil
                 GL.EnableVertexAttribArray(normalLocation);
                 GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
             }
+            vertexCount = 36; // 3 per fragment; 2 frags per side
 
             vertexArrayID = _CubeVertexArrayID;
             _parent = parent;
