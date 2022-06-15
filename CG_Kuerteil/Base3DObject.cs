@@ -9,19 +9,51 @@ namespace CG_Kuerteil
         private Color4 color;
         private Vector3 position;
         private Vector3 scale;
-        private Vector3 rotation;
         protected Container? _parent;
         protected Shader _shader;
         protected int vertexCount = 0;
 
-        public Base3DObject(Shader shader)
+        public Base3DObject()
         {
-            _shader = shader;
+            _shader = CG_Kuerteil.Register.GetRegister().Get<Shader>();
         }
 
         public Vector3 Position { get => position; set => position = value; }
         public Vector3 Scale { get => scale; set => scale = value; }
-        public Vector3 Rotation { get => rotation; set => rotation = value; }
+
+        private float rotationX = 0f;
+
+        public virtual float RotationX
+        {
+            get => OpenTK.Mathematics.MathHelper.DegreesToRadians(rotationX);
+            set
+            {
+                rotationX = value % 360;
+            }
+        }
+
+        private float rotationY = 0f;
+
+        public virtual float RotationY
+        {
+            get => OpenTK.Mathematics.MathHelper.DegreesToRadians(rotationY);
+            set
+            {
+                rotationY = value % 360;
+            }
+        }
+
+        private float rotationZ = 0f;
+
+        public virtual float RotationZ
+        {
+            get => OpenTK.Mathematics.MathHelper.DegreesToRadians(rotationZ);
+            set
+            {
+                rotationZ = value % 360;
+            }
+        }
+
         public Color4 Color { get => color; set => color = value; }
 
         public virtual void Render()
@@ -32,14 +64,48 @@ namespace CG_Kuerteil
             else
                 parentMat = Matrix4.Identity;
 
-            Matrix4 model = Matrix4.CreateScale(scale) * Matrix4.CreateTranslation(position) * parentMat;
+            Matrix4 model = Matrix4.CreateScale(scale) * Matrix4.CreateTranslation(position) * Matrix4.CreateRotationX(RotationX) * Matrix4.CreateRotationY(RotationY) * Matrix4.CreateRotationZ(RotationZ) * parentMat;
             _shader.SetVector4("objectColor", (Vector4)color);
             _shader.SetMatrix4("model", model);
-            _shader.SetMatrix4("view", Register.GetRegister().GetCamera().GetViewMatrix());
-            _shader.SetMatrix4("projection", Register.GetRegister().GetCamera().GetProjectionMatrix());
+            _shader.SetMatrix4("view", CG_Kuerteil.Register.GetRegister().Get<Camera>().GetViewMatrix());
+            _shader.SetMatrix4("projection", CG_Kuerteil.Register.GetRegister().Get<Camera>().GetProjectionMatrix());
 
             GL.BindVertexArray(vertexArrayID);
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertexCount);
+        }
+
+        protected void RegisterArray(float[] vertices, int vertexCount)
+        {
+            if (CG_Kuerteil.Register.GetRegister().TryGetVertexArray($"{GetType().Name}{vertexCount}", out var data))
+            {
+                this.vertexCount = data.Count;
+                this.vertexArrayID = data.ArrayID;
+                return;
+            }
+
+            int vertexBuffer = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
+
+            // set buffer data
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+
+            int vertexArrayID = GL.GenVertexArray();
+            GL.BindVertexArray(vertexArrayID);
+
+            // describe data
+            int vertexLocation = _shader.GetAttribLocation("aPosition");
+            GL.EnableVertexAttribArray(vertexLocation);
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+
+            // We now need to define the laout of the normal so the shader can use it
+            var normalLocation = _shader.GetAttribLocation("aNormal");
+            GL.EnableVertexAttribArray(normalLocation);
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+
+            this.vertexCount = vertexCount;
+            this.vertexArrayID = vertexArrayID;
+
+            CG_Kuerteil.Register.GetRegister().RegisterVertexArray($"{GetType().Name}{vertexCount}", new(vertexArrayID, vertexBuffer, vertexCount));
         }
     }
 }

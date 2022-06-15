@@ -45,11 +45,13 @@ namespace CG_Kuerteil
             GL.Enable(EnableCap.DepthTest);
 
             _camera = new Camera(new(0, 0, 2f), Size.X / (float)Size.Y);
-            Register.GetRegister().RegisterCamera(_camera);
-
-            container = new PieDiagram(_shader);
 
             Light light = new(new Vector3(0, 3, 15f), _shader, _camera, Color4.White);
+
+            Register.GetRegister().RegisterObject(_camera);
+            Register.GetRegister().RegisterObject(_shader);
+
+            container = new PieDiagram();
         }
 
 
@@ -80,9 +82,7 @@ namespace CG_Kuerteil
             GL.BindVertexArray(0);
             GL.UseProgram(0);
 
-            // TODO: Delete all the resources.
-            //GL.DeleteBuffer(_CubeVertexBuffer);
-            //GL.DeleteVertexArray(_CubeVertexArrayID);
+            Register.GetRegister().DestroyAllVertexArray();
 
             GL.DeleteProgram(_shader.Handle);
 
@@ -117,24 +117,23 @@ namespace CG_Kuerteil
                 var angleY = OpenTK.Mathematics.MathHelper.Clamp(mouse.Y - _lastPos.Y, -89f, 89f) * sensitivity;
                 var angleX = OpenTK.Mathematics.MathHelper.Clamp(mouse.X - _lastPos.X, -89f, 89f) * sensitivity;
 
-                container.model *= Matrix4.CreateRotationX(angleY);
-                container.model *= Matrix4.CreateRotationY(angleX);
+                // ja ist so gewollt das x und y vertauscht sind
+                container.AddRotation(Container.Direction.X, angleY);
+                container.AddRotation(Container.Direction.Y, angleX);
             }
+
             _lastPos = new Vector2(mouse.X, mouse.Y);
 
-
             if (KeyboardState.IsKeyDown(Keys.Up))
-                container.model *= Matrix4.CreateRotationX(-sensitivity);
-
+                container.AddRotation(Container.Direction.X, -sensitivity);
             if (KeyboardState.IsKeyDown(Keys.Down))
-                container.model *= Matrix4.CreateRotationX(sensitivity);
+                container.AddRotation(Container.Direction.X, sensitivity);
 
             if (KeyboardState.IsKeyDown(Keys.Left))
-                container.model *= Matrix4.CreateRotationY(-sensitivity);
+                container.AddRotation(Container.Direction.Y, -sensitivity);
 
             if (KeyboardState.IsKeyDown(Keys.Right))
-                container.model *= Matrix4.CreateRotationY(sensitivity);
-
+                container.AddRotation(Container.Direction.Y, sensitivity);
         }
 
         // In the mouse wheel function, we manage all the zooming of the camera.

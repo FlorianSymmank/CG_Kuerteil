@@ -7,7 +7,7 @@ namespace CG_Kuerteil
     {
         private List<Bar> bars = new() { new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Firebrick, 19), new Bar(Color4.Firebrick, 19), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Aqua, 10), new Bar(Color4.Beige, 4), new Bar(Color4.Firebrick, 19), new Bar(Color4.Green, -25) };
 
-        public BarDiagram(Shader shader) : base(shader)
+        public BarDiagram()
         {
             float space = 2f / bars.Count;
             float start = space / 2 - 1;
@@ -26,7 +26,7 @@ namespace CG_Kuerteil
 
                 offsetSpace += space;
 
-                Base3DObject base3DObject = new Cube(this, shader)
+                Base3DObject base3DObject = new Cube(this)
                 {
                     Color = bar.Color,
                     Scale = scale,

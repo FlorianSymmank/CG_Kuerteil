@@ -1,45 +1,41 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using System.Diagnostics;
 using static CG_Kuerteil.MathHelper;
 
 namespace CG_Kuerteil
 {
     public class Slice : Base3DObject
     {
-        public Slice(Container parent, Shader shader, int angle) : base(shader)
+        public readonly int Angle;
+
+        public Slice(Container parent, int angle)
         {
-            CreateSlice(angle, out int vertexArrayID, out int vertexCount);
+            CreateSlice(angle);
 
-            this._parent = parent;
-            this.vertexCount = vertexCount;
-            this.vertexArrayID = vertexArrayID;
+            Angle = angle;
 
-            Scale = OpenTK.Mathematics.Vector3.One;
-            Position = OpenTK.Mathematics.Vector3.Zero;
-            Rotation = OpenTK.Mathematics.Vector3.Zero;
-            Color = Color4.White;
+            _parent = parent;
+            Scale = Vector3.One;
         }
-
-        private static Dictionary<int, (int id, int count)> SliceMap = new();
 
         private int offsetID = 0;
         private int OffsetID => offsetID++;
-        private void CreateSlice(int angle, out int vertexArrayID, out int vertexCount)
+        private void CreateSlice(int angle)
         {
-            if (SliceMap.ContainsKey(angle))
-            {
-                var value = SliceMap[angle];
-                vertexArrayID = value.id;
-                vertexCount = value.count;
-                return;
-            }
-
             int indexesF = 18; // Front points
             int indexesB = 18; // Back  points
             int indexesR = 2 * 18; // right side
 
             int offset = indexesF + indexesB + indexesR;
             int vertices = angle * offset;
+
+            if (CG_Kuerteil.Register.GetRegister().TryGetVertexArray($"{GetType().Name}{vertices}", out var data))
+            {
+                vertexArrayID = data.ArrayID;
+                vertexCount = data.Count;
+                return;
+            }
 
             float[] sliceVertices = new float[vertices];
             float radius = 1;
@@ -191,34 +187,7 @@ namespace CG_Kuerteil
                 offsetID = 0;
             }
 
-            vertexArrayID = Register(sliceVertices);
-            vertexCount = vertices;
-
-            SliceMap.Add(angle, (vertexArrayID, vertexCount));
-        }
-
-        private int Register(float[] vertices)
-        {
-            int vertexBuffer = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
-
-            // set buffer data
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-
-            int vertexArrayID = GL.GenVertexArray();
-            GL.BindVertexArray(vertexArrayID);
-
-            // describe data
-            int vertexLocation = _shader.GetAttribLocation("aPosition");
-            GL.EnableVertexAttribArray(vertexLocation);
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
-
-            // We now need to define the laCircleYout of the normal so the shader can use it
-            var normalLocation = _shader.GetAttribLocation("aNormal");
-            GL.EnableVertexAttribArray(normalLocation);
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-
-            return vertexArrayID;
+            RegisterArray(sliceVertices, vertices);
         }
     }
 }

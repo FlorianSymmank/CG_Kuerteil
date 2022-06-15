@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK.Graphics.OpenGL4;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,8 @@ namespace CG_Kuerteil
     public class Register
     {
         private static Register register = null;
-        private Camera camera = new Camera(new(), 640/400f);
-        private IDictionary<string, int> vertexArrayIDs = new Dictionary<string, int>();
+
+        private IDictionary<string, VertexData> vertexArrayData = new Dictionary<string, VertexData>();
 
         public static Register GetRegister()
         {
@@ -20,23 +21,42 @@ namespace CG_Kuerteil
             return register;
         }
 
-        public Camera GetCamera()
+        public bool TryGetVertexArray(string name, out VertexData vertexData)
         {
-            return camera;
-        }
-        public void RegisterCamera(Camera camera)
-        {
-            this.camera = camera;
+            return vertexArrayData.TryGetValue(name, out vertexData);
         }
 
-        public int GetArrayID(string name)
+        public void RegisterVertexArray(string name, VertexData vertexData)
         {
-            return vertexArrayIDs[name];
+            vertexArrayData.Add(name, vertexData);
         }
 
-        public void RegisterArrayID(string name, int arrayID)
+        public void DestroyAllVertexArray()
         {
-            vertexArrayIDs.Add(name, arrayID);
+            foreach (var vertexData in vertexArrayData.Values)
+            {
+                GL.DeleteBuffer(vertexData.BufferID);
+                GL.DeleteVertexArray(vertexData.ArrayID);
+            }
         }
+
+        public void UnRegister<T>()
+        {
+            registerDict.Remove(typeof(T));
+        }
+
+        public void RegisterObject(Object a)
+        {
+            registerDict.Add(a.GetType(), a);
+        }
+
+        public T Get<T>()
+        {
+            registerDict.TryGetValue(typeof(T), out object registered);
+            return (T)registered;
+
+        }
+
+        private Dictionary<Type, object> registerDict = new Dictionary<Type, object>();
     }
 }
