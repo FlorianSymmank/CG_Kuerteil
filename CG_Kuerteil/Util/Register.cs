@@ -1,11 +1,7 @@
-﻿using OpenTK.Graphics.OpenGL4;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CG_Kuerteil.Graphics;
+using OpenTK.Graphics.OpenGL4;
 
-namespace CG_Kuerteil
+namespace CG_Kuerteil.Util
 {
     public class Register
     {
@@ -55,7 +51,8 @@ namespace CG_Kuerteil
             if (registerDict.TryGetValue(typeof(T), out object registered))
             {
                 return (T)registered;
-            }else
+            }
+            else
             {
                 throw new Exception("Searched Type not found");
             }

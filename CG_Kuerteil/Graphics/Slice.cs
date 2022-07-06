@@ -1,9 +1,8 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using CG_Kuerteil.Util;
 using OpenTK.Mathematics;
-using System.Diagnostics;
-using static CG_Kuerteil.MathHelper;
+using static CG_Kuerteil.Util.MathHelper;
 
-namespace CG_Kuerteil
+namespace CG_Kuerteil.Graphics
 {
     public class Slice : Base3DObject
     {
@@ -30,7 +29,7 @@ namespace CG_Kuerteil
             int offset = indexesF + indexesB + indexesR;
             int vertices = angle * offset;
 
-            if (CG_Kuerteil.Register.GetRegister().TryGetVertexArray($"{GetType().Name}{vertices}", out var data))
+            if (Register.GetRegister().TryGetVertexArray($"{GetType().Name}{vertices}", out var data))
             {
                 vertexArrayID = data.ArrayID;
                 vertexCount = data.Count;

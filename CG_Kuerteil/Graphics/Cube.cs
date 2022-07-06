@@ -1,7 +1,4 @@
-﻿using OpenTK.Graphics.OpenGL4;
-
-
-namespace CG_Kuerteil
+﻿namespace CG_Kuerteil.Graphics
 {
     public class Cube : Base3DObject
     {

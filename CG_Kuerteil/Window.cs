@@ -1,9 +1,11 @@
-﻿using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
-using OpenTK.Windowing.Desktop;
+﻿using CG_Kuerteil.Data;
+using CG_Kuerteil.Graphics;
+using CG_Kuerteil.Util;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace CG_Kuerteil
 {

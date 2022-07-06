@@ -1,11 +1,7 @@
-﻿using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CG_Kuerteil.Graphics;
+using OpenTK.Mathematics;
 
-namespace CG_Kuerteil
+namespace CG_Kuerteil.Data
 {
     public class PieDiagram : Container
     {

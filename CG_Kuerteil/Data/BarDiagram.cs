@@ -1,7 +1,8 @@
-﻿using OpenTK.Mathematics;
+﻿using CG_Kuerteil.Graphics;
+using OpenTK.Mathematics;
 
 
-namespace CG_Kuerteil
+namespace CG_Kuerteil.Data
 {
     public class BarDiagram : Diagramm
     {
@@ -28,7 +29,7 @@ namespace CG_Kuerteil
 
             for (int i = 0; i < series[0].Count; i++)
             {
-                foreach(Series s in series)
+                foreach (Series s in series)
                 {
                     DataPoint dp = s[i];
 

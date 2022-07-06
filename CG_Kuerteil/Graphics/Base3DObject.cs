@@ -1,7 +1,8 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using CG_Kuerteil.Util;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace CG_Kuerteil
+namespace CG_Kuerteil.Graphics
 {
     public abstract class Base3DObject
     {
@@ -52,7 +53,7 @@ namespace CG_Kuerteil
 
         public virtual void Render()
         {
-            Shader shader = CG_Kuerteil.Register.GetRegister().Get<Shader>();
+            Shader shader = Register.GetRegister().Get<Shader>();
 
             Matrix4 parentMat;
             if (_parent != null)
@@ -63,8 +64,8 @@ namespace CG_Kuerteil
             Matrix4 model = Matrix4.CreateScale(scale) * Matrix4.CreateTranslation(position) * Matrix4.CreateRotationX(RotationX) * Matrix4.CreateRotationY(RotationY) * Matrix4.CreateRotationZ(RotationZ) * parentMat;
             shader.SetVector4("objectColor", (Vector4)color);
             shader.SetMatrix4("model", model);
-            shader.SetMatrix4("view", CG_Kuerteil.Register.GetRegister().Get<Camera>().GetViewMatrix());
-            shader.SetMatrix4("projection", CG_Kuerteil.Register.GetRegister().Get<Camera>().GetProjectionMatrix());
+            shader.SetMatrix4("view", Register.GetRegister().Get<Camera>().GetViewMatrix());
+            shader.SetMatrix4("projection", Register.GetRegister().Get<Camera>().GetProjectionMatrix());
 
             GL.BindVertexArray(vertexArrayID);
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertexCount);
@@ -72,9 +73,9 @@ namespace CG_Kuerteil
 
         protected void RegisterArray(float[] vertices, int vertexCount)
         {
-            Shader shader = CG_Kuerteil.Register.GetRegister().Get<Shader>();
+            Shader shader = Register.GetRegister().Get<Shader>();
 
-            if (CG_Kuerteil.Register.GetRegister().TryGetVertexArray($"{GetType().Name}{vertexCount}", out var data))
+            if (Register.GetRegister().TryGetVertexArray($"{GetType().Name}{vertexCount}", out var data))
             {
                 this.vertexCount = data.Count;
                 this.vertexArrayID = data.ArrayID;
@@ -103,7 +104,7 @@ namespace CG_Kuerteil
             this.vertexCount = vertexCount;
             this.vertexArrayID = vertexArrayID;
 
-            CG_Kuerteil.Register.GetRegister().RegisterVertexArray($"{GetType().Name}{vertexCount}", new(vertexArrayID, vertexBuffer, vertexCount));
+            Register.GetRegister().RegisterVertexArray($"{GetType().Name}{vertexCount}", new(vertexArrayID, vertexBuffer, vertexCount));
         }
     }
 }

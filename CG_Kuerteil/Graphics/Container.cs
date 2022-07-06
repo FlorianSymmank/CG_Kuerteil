@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace CG_Kuerteil
+namespace CG_Kuerteil.Graphics
 {
     public class Container : Base3DObject
     {
@@ -27,7 +27,7 @@ namespace CG_Kuerteil
             set
             {
                 base.RotationX = value;
-                model *= Matrix4.CreateRotationX(OpenTK.Mathematics.MathHelper.DegreesToRadians(value));
+                model *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(value));
             }
         }
 
@@ -37,7 +37,7 @@ namespace CG_Kuerteil
             set
             {
                 base.RotationY = value;
-                model *= Matrix4.CreateRotationY(OpenTK.Mathematics.MathHelper.DegreesToRadians(value));
+                model *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(value));
             }
         }
 
@@ -47,7 +47,7 @@ namespace CG_Kuerteil
             set
             {
                 base.RotationZ = value;
-                model *= Matrix4.CreateRotationZ(OpenTK.Mathematics.MathHelper.DegreesToRadians(value));
+                model *= Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(value));
             }
         }
 

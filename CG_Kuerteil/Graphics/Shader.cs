@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
+﻿using CG_Kuerteil.Util;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace CG_Kuerteil
+namespace CG_Kuerteil.Graphics
 {
     // A simple class meant to help create shaders.
     public class Shader
@@ -18,7 +15,7 @@ namespace CG_Kuerteil
         {
             // The vertex shader is responsible for moving around vertices, and uploading that data to the fragment shader.
             // The fragment shader is responsible for then converting the vertices to "fragments", which represent all the data OpenGL needs to draw a pixel.
- 
+
             // Load vertex shader and compile
             var shaderSource = File.ReadAllText(vertPath);
 

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CG_Kuerteil.Graphics;
 
-namespace CG_Kuerteil
+namespace CG_Kuerteil.Data
 {
     public abstract class Diagramm : Container
     {

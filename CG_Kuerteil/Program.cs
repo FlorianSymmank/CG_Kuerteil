@@ -1,4 +1,5 @@
-﻿using CG_Kuerteil;
+﻿using CG_Kuerteil.Data;
+using CG_Kuerteil.Util;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;

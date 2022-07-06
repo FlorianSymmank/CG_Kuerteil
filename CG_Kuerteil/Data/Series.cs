@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace CG_Kuerteil
+namespace CG_Kuerteil.Data
 {
     public class Series
     {

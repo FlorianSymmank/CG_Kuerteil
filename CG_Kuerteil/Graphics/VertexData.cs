@@ -1,4 +1,4 @@
-﻿namespace CG_Kuerteil
+﻿namespace CG_Kuerteil.Graphics
 {
     public class VertexData
     {
