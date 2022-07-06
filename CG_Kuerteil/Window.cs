@@ -3,7 +3,6 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using OpenTK.Mathematics;
 
 
 namespace CG_Kuerteil
@@ -19,7 +18,10 @@ namespace CG_Kuerteil
 
         private Vector2 _lastPos;
 
-        private Container container;
+        private Diagramm _diagramm;
+
+        public delegate void Notify(Window window);
+        public event Notify OnLoaded;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -51,9 +53,13 @@ namespace CG_Kuerteil
             Register.GetRegister().RegisterObject(_camera);
             Register.GetRegister().RegisterObject(_shader);
 
-            container = new PieDiagram();
+            OnLoaded?.Invoke(this);
         }
 
+        public void SetDiagramm(Diagramm diagramm)
+        {
+            _diagramm = diagramm;
+        }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -64,7 +70,7 @@ namespace CG_Kuerteil
             // Bind the shader
             _shader.Use();
 
-            container.Render();
+            _diagramm?.Render();
 
             SwapBuffers();
         }
@@ -118,22 +124,22 @@ namespace CG_Kuerteil
                 var angleX = OpenTK.Mathematics.MathHelper.Clamp(mouse.X - _lastPos.X, -89f, 89f) * sensitivity;
 
                 // ja ist so gewollt das x und y vertauscht sind
-                container.AddRotation(Container.Direction.X, angleY);
-                container.AddRotation(Container.Direction.Y, angleX);
+                _diagramm?.AddRotation(Container.Direction.X, angleY);
+                _diagramm?.AddRotation(Container.Direction.Y, angleX);
             }
 
             _lastPos = new Vector2(mouse.X, mouse.Y);
 
             if (KeyboardState.IsKeyDown(Keys.Up))
-                container.AddRotation(Container.Direction.X, -sensitivity);
+                _diagramm?.AddRotation(Container.Direction.X, -sensitivity);
             if (KeyboardState.IsKeyDown(Keys.Down))
-                container.AddRotation(Container.Direction.X, sensitivity);
+                _diagramm?.AddRotation(Container.Direction.X, sensitivity);
 
             if (KeyboardState.IsKeyDown(Keys.Left))
-                container.AddRotation(Container.Direction.Y, -sensitivity);
+                _diagramm?.AddRotation(Container.Direction.Y, -sensitivity);
 
             if (KeyboardState.IsKeyDown(Keys.Right))
-                container.AddRotation(Container.Direction.Y, sensitivity);
+                _diagramm?.AddRotation(Container.Direction.Y, sensitivity);
         }
 
         // In the mouse wheel function, we manage all the zooming of the camera.

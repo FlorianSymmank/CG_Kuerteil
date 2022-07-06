@@ -10,13 +10,7 @@ namespace CG_Kuerteil
         private Vector3 position;
         private Vector3 scale;
         protected Container? _parent;
-        protected Shader _shader;
         protected int vertexCount = 0;
-
-        public Base3DObject()
-        {
-            _shader = CG_Kuerteil.Register.GetRegister().Get<Shader>();
-        }
 
         public Vector3 Position { get => position; set => position = value; }
         public Vector3 Scale { get => scale; set => scale = value; }
@@ -58,6 +52,8 @@ namespace CG_Kuerteil
 
         public virtual void Render()
         {
+            Shader shader = CG_Kuerteil.Register.GetRegister().Get<Shader>();
+
             Matrix4 parentMat;
             if (_parent != null)
                 parentMat = _parent.model;
@@ -65,10 +61,10 @@ namespace CG_Kuerteil
                 parentMat = Matrix4.Identity;
 
             Matrix4 model = Matrix4.CreateScale(scale) * Matrix4.CreateTranslation(position) * Matrix4.CreateRotationX(RotationX) * Matrix4.CreateRotationY(RotationY) * Matrix4.CreateRotationZ(RotationZ) * parentMat;
-            _shader.SetVector4("objectColor", (Vector4)color);
-            _shader.SetMatrix4("model", model);
-            _shader.SetMatrix4("view", CG_Kuerteil.Register.GetRegister().Get<Camera>().GetViewMatrix());
-            _shader.SetMatrix4("projection", CG_Kuerteil.Register.GetRegister().Get<Camera>().GetProjectionMatrix());
+            shader.SetVector4("objectColor", (Vector4)color);
+            shader.SetMatrix4("model", model);
+            shader.SetMatrix4("view", CG_Kuerteil.Register.GetRegister().Get<Camera>().GetViewMatrix());
+            shader.SetMatrix4("projection", CG_Kuerteil.Register.GetRegister().Get<Camera>().GetProjectionMatrix());
 
             GL.BindVertexArray(vertexArrayID);
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertexCount);
@@ -76,6 +72,8 @@ namespace CG_Kuerteil
 
         protected void RegisterArray(float[] vertices, int vertexCount)
         {
+            Shader shader = CG_Kuerteil.Register.GetRegister().Get<Shader>();
+
             if (CG_Kuerteil.Register.GetRegister().TryGetVertexArray($"{GetType().Name}{vertexCount}", out var data))
             {
                 this.vertexCount = data.Count;
@@ -93,12 +91,12 @@ namespace CG_Kuerteil
             GL.BindVertexArray(vertexArrayID);
 
             // describe data
-            int vertexLocation = _shader.GetAttribLocation("aPosition");
+            int vertexLocation = shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
             // We now need to define the laout of the normal so the shader can use it
-            var normalLocation = _shader.GetAttribLocation("aNormal");
+            var normalLocation = shader.GetAttribLocation("aNormal");
             GL.EnableVertexAttribArray(normalLocation);
             GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
 

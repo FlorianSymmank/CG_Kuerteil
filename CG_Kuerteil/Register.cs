@@ -52,8 +52,13 @@ namespace CG_Kuerteil
 
         public T Get<T>()
         {
-            registerDict.TryGetValue(typeof(T), out object registered);
-            return (T)registered;
+            if (registerDict.TryGetValue(typeof(T), out object registered))
+            {
+                return (T)registered;
+            }else
+            {
+                throw new Exception("Searched Type not found");
+            }
 
         }
 
