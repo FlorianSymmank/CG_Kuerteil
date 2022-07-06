@@ -34,9 +34,9 @@ namespace CG_Kuerteil
             Diagramm d = new BarDiagram("", "");
 
             Series series = new Series();
-            series.AddDataPoint(new(4, Color4.Firebrick));
-            series.AddDataPoint(new(10, Color4.Aqua));
-            series.AddDataPoint(new(-8, Color4.Green));
+            series.AddDataPoint(new(1, Color4.Firebrick));
+            series.AddDataPoint(new(1, Color4.Aqua));
+            series.AddDataPoint(new(19, Color4.Green));
 
             Series series2 = new Series();
             series2.AddDataPoint(new(19, Color4.Yellow));
