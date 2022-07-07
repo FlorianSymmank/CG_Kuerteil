@@ -66,6 +66,7 @@ namespace CG_Kuerteil.Graphics
             shader.SetMatrix4("model", model);
             shader.SetMatrix4("view", Register.GetRegister().Get<Camera>().GetViewMatrix());
             shader.SetMatrix4("projection", Register.GetRegister().Get<Camera>().GetProjectionMatrix());
+            shader.SetInt("mode", 1);
 
             GL.BindVertexArray(vertexArrayID);
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertexCount);

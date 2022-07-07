@@ -21,6 +21,7 @@ namespace CG_Kuerteil
         private Vector2 _lastPos;
 
         private Diagramm _diagramm;
+        private TextRenderer _textRenderer;
 
         public delegate void Notify(Window window);
         public event Notify OnLoaded;
@@ -30,7 +31,6 @@ namespace CG_Kuerteil
         {
             Logger.Log("Create Window");
         }
-
         protected override void OnLoad()
         {
             Logger.Log("Load Window");
@@ -55,6 +55,9 @@ namespace CG_Kuerteil
             Register.GetRegister().RegisterObject(_camera);
             Register.GetRegister().RegisterObject(_shader);
 
+            _textRenderer = new TextRenderer();
+            Register.GetRegister().RegisterObject(_textRenderer);
+
             OnLoaded?.Invoke(this);
         }
 
@@ -73,6 +76,18 @@ namespace CG_Kuerteil
             _shader.Use();
 
             _diagramm?.Render();
+
+            // TODO: Change this
+            _textRenderer.Rows = 20;
+            _textRenderer.Columns = 20;
+            _textRenderer.RenderText(_diagramm.Title, 10 - (_diagramm.Title.Length / 2), 1);
+
+            _textRenderer.Rows = 80;
+            _textRenderer.Columns = 80;
+            string fps = string.Format("fps: {0:0.00}", 1 / e.Time);
+            _textRenderer.RenderText(fps, 0, 0);
+
+            _textRenderer.RenderText($"123 ABC abc #*/ ±¿ß {(char)254}", 0, 79);
 
             SwapBuffers();
         }

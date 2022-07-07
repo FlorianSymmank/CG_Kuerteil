@@ -31,7 +31,7 @@ namespace CG_Kuerteil
 
         private static void AddDiagramm(Window window)
         {
-            Diagramm d = new BarDiagram("", "");
+            Diagramm d = new PieDiagram("Pie diagramm", "Description");
 
             Series series = new Series();
             series.AddDataPoint(new(1, Color4.Firebrick));
