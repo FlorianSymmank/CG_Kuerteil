@@ -28,15 +28,10 @@ namespace CG_Kuerteil.Data
                 return;
             }
 
-            float spacer = 1f / (series.Count - 1);
-            float width = 1f / series.Count;
-            float start = -1.66f;
+            float spacer = 1f / series[0].Count;
+            float width = 2f / series[0].Count;
+            float start = (width / 2 + spacer / 2) - (width * series[0].Count / 2f) - (spacer * series[0].Count / 2f);
             float offsetSpace = start;
-
-            Console.WriteLine(spacer);
-            Console.WriteLine(width);
-            Console.WriteLine(start);
-
 
             float[] summedVals = new float[series[0].Count];
 
@@ -75,7 +70,7 @@ namespace CG_Kuerteil.Data
                 }
 
 
-                offsetSpace += spacer + width;
+                offsetSpace += width + spacer;
             }
 
             // Percentage bars
@@ -98,6 +93,7 @@ namespace CG_Kuerteil.Data
                 Position = new(0, 0, 0),
             });
 
+            model *= Matrix4.CreateTranslation(0, -0.5f, 0);
             DataSeries = series;
         }
     }

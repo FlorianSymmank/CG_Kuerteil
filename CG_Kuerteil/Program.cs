@@ -42,7 +42,7 @@ namespace CG_Kuerteil
             series.AddDataPoint(new(1, createColor()) { Title = "Series 1, Datapoint 2" });
             series.AddDataPoint(new(20, createColor()) { Title = "Series 1, Datapoint 3" });
             series.AddDataPoint(new(20, createColor()) { Title = "Series 1, Datapoint 4" });
-            //series.AddDataPoint(new(20, createColor()) { Title = "Series 1, Datapoint 4" });
+            series.AddDataPoint(new(20, createColor()) { Title = "Series 1, Datapoint 4" });
 
 
             Series series2 = new()
@@ -55,7 +55,7 @@ namespace CG_Kuerteil
             series2.AddDataPoint(new(0, createColor()) { Title = "Series 2, Datapoint 2" });
             series2.AddDataPoint(new(5, createColor()) { Title = "Series 2, Datapoint 3" });
             series2.AddDataPoint(new(20, createColor()) { Title = "Series 2, Datapoint 4" });
-            //series2.AddDataPoint(new(20, createColor()) { Title = "Series 2, Datapoint 4" });
+            series2.AddDataPoint(new(20, createColor()) { Title = "Series 2, Datapoint 4" });
 
 
             Series series3 = new()
@@ -68,7 +68,7 @@ namespace CG_Kuerteil
             series3.AddDataPoint(new(13, createColor()) { Title = "Series 3, Datapoint 2" });
             series3.AddDataPoint(new(5, createColor()) { Title = "Series 3, Datapoint 3" });
             series3.AddDataPoint(new(20, createColor()) { Title = "Series 3, Datapoint 4" });
-            //series3.AddDataPoint(new(20, createColor()) { Title = "Series 3, Datapoint 4" });
+            series3.AddDataPoint(new(20, createColor()) { Title = "Series 3, Datapoint 4" });
 
 
             Series series4 = new()
@@ -80,10 +80,11 @@ namespace CG_Kuerteil
             series4.AddDataPoint(new(20, createColor()) { Title = "Series 4, Datapoint 1" });
             series4.AddDataPoint(new(13, createColor()) { Title = "Series 4, Datapoint 2" });
             series4.AddDataPoint(new(5, createColor()) { Title = "Series 4, Datapoint 3" });
-            //series4.AddDataPoint(new(20, createColor()) { Title = "Series 4, Datapoint 4" });
+            series4.AddDataPoint(new(20, createColor()) { Title = "Series 4, Datapoint 4" });
+            series4.AddDataPoint(new(20, createColor()) { Title = "Series 4, Datapoint 4" });
 
 
-            d.SetSeries(new List<Series>() { series, series2, series3 });
+            d.SetSeries(new List<Series>() { series, series2, series3/*, series4 */});
             window.SetDiagramm(d);
         }
 

@@ -16,9 +16,13 @@ namespace CG_Kuerteil.Data
         {
             Base3DObjects.Clear();
 
-            float spacer = 0.5f;
-            float width = 1f / series.Count / series[0].Count;
-            float start = -(spacer * series.Count + width * series[0].Count) / 2;
+            float spacer = 0.5f / series.Count;
+            float width = 0.5f / series.Count;
+
+            float widthBars = width * series.Count * series[0].Count;
+            float widthSpacer = spacer * (series[0].Count - 2);
+            float len = widthBars + widthSpacer;
+            float start = -len / 2;
             float offsetSpace = start;
 
             float min = series.Min(x => x.MinValue);
@@ -62,7 +66,7 @@ namespace CG_Kuerteil.Data
                 Base3DObjects.Add(new Cube(this)
                 {
                     Color = Color4.Gray,
-                    Scale = new(offsetSpace + offsetSpace * 0.4f, 0.001f, 0.001f),
+                    Scale = new(len * 1.1f, 0.001f, 0.001f),
                     Position = new(0, y, 0),
                 });
             }
@@ -74,15 +78,18 @@ namespace CG_Kuerteil.Data
                     Base3DObjects.Add(new Cube(this)
                     {
                         Color = Color4.Gray,
-                        Scale = new(offsetSpace + offsetSpace * 0.4f, 0.001f, 0.001f),
+                        Scale = new(len * 1.1f, 0.001f, 0.001f),
                         Position = new(0, y, 0),
                     });
                 }
+            else
+                model *= Matrix4.CreateTranslation(0, -0.5f, 0);
+
 
             Base3DObjects.Add(new Cube(this)
             {
                 Color = Color4.Black,
-                Scale = new(offsetSpace + offsetSpace * 0.4f, 0.001f, 0.001f),
+                Scale = new(len * 1.1f, 0.001f, 0.001f),
                 Position = new(0, 0, 0),
             });
 
