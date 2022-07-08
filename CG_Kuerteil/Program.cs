@@ -18,7 +18,7 @@ namespace CG_Kuerteil
                 Title = "LearnOpenTK - Creating a Window",
                 // This is needed to run on macos
                 Flags = ContextFlags.ForwardCompatible,
-                
+
             };
 
             // To create a new window, create a class that extends GameWindow, then call Run() on it.
@@ -31,18 +31,18 @@ namespace CG_Kuerteil
 
         private static void AddDiagramm(Window window)
         {
-            Diagramm d = new BarDiagram("Pie diagramm", "Description");
+            Diagramm d = new BarDiagram("Bar diagramm", "Description");
 
-            Series series = new Series()
+            Series series = new()
             {
                 Description = "Description 1",
                 Color = createColor(),
             };
             series.AddDataPoint(new(1, createColor()) { Title = "Series 1, Datapoint 1" });
             series.AddDataPoint(new(1, createColor()) { Title = "Series 1, Datapoint 2" });
-            series.AddDataPoint(new(19, createColor()) { Title = "Series 1, Datapoint 3" });
+            series.AddDataPoint(new(20, createColor()) { Title = "Series 1, Datapoint 3" });
 
-            Series series2 = new Series()
+            Series series2 = new()
             {
                 Description = "Description 2",
                 Color = createColor(),
@@ -52,7 +52,7 @@ namespace CG_Kuerteil
             series2.AddDataPoint(new(0, createColor()) { Title = "Series 2, Datapoint 2" });
             series2.AddDataPoint(new(5, createColor()) { Title = "Series 2, Datapoint 3" });
 
-            Series series3 = new Series()
+            Series series3 = new()
             {
                 Description = "Description 3",
                 Color = createColor(),

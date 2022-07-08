@@ -23,8 +23,12 @@ namespace CG_Kuerteil.Data
 
             float min = series.Min(x => x.MinValue);
             float max = series.Max(x => x.MaxValue);
+
+            float maxmax = Math.Max(Math.Abs(max), Math.Abs(min));
+
             min -= min * 0.1f;
             max += max * 0.1f;
+
             float range = max - min;
 
             for (int i = 0; i < series[0].Count; i++)
@@ -50,8 +54,39 @@ namespace CG_Kuerteil.Data
                 offsetSpace += spacer;
             }
 
-            DataSeries = series;
+            // Percentage bars
+            float percentageIndicator25 = maxmax / range / 4;
+            for (int i = 1; i < 5; i++)
+            {
+                float y = i * percentageIndicator25;
+                Base3DObjects.Add(new Cube(this)
+                {
+                    Color = Color4.Gray,
+                    Scale = new(offsetSpace + offsetSpace * 0.4f, 0.001f, 0.001f),
+                    Position = new(0, y, 0),
+                });
+            }
 
+            if (min < 0)
+                for (int i = -1; i > -5; i--)
+                {
+                    float y = i * percentageIndicator25;
+                    Base3DObjects.Add(new Cube(this)
+                    {
+                        Color = Color4.Gray,
+                        Scale = new(offsetSpace + offsetSpace * 0.4f, 0.001f, 0.001f),
+                        Position = new(0, y, 0),
+                    });
+                }
+
+            Base3DObjects.Add(new Cube(this)
+            {
+                Color = Color4.Black,
+                Scale = new(offsetSpace + offsetSpace * 0.4f, 0.001f, 0.001f),
+                Position = new(0, 0, 0),
+            });
+
+            DataSeries = series;
         }
     }
 }
