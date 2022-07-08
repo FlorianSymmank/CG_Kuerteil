@@ -5,14 +5,14 @@ namespace CG_Kuerteil.Data
 {
     public class Series
     {
-        protected List<DataPoint> dataPoints = new List<DataPoint>();
-        public virtual Color4 Color { get; set; }
+        public List<DataPoint> dataPoints { get; protected set; } = new List<DataPoint>();
+        public virtual Color4 Color { get; set; } = Color4.White;
         public float MinValue => dataPoints.Min(x => x.Value);
         public float MaxValue => dataPoints.Max(x => x.Value);
         public float SummedValue => dataPoints.Sum(x => x.Value);
         public bool HasNegativeValues => dataPoints.Any(x => x.Value < 0);
-
         public int Count => dataPoints.Count;
+        public string Description { get; set; } = "";
 
         public void AddDataPoint(DataPoint data)
         {

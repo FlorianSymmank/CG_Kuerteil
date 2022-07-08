@@ -47,12 +47,13 @@ namespace CG_Kuerteil.Graphics
             row += 1;
 
             Shader shader = Register.GetRegister().Get<Shader>();
-            float offset = 1f / (Columns / 2);
+            float offsetC = 1f / (Columns / 2);
+            float offsetR = 1f / (Rows / 2);
 
-            float x = -1 + (offset * column);
-            float y = 1 - (offset * row);
+            float x = -1 + (offsetC * column);
+            float y = 1 - (offsetR * row);
 
-            Matrix4 model = Matrix4.CreateScale(offset) * Matrix4.CreateTranslation(new(x, y, 0));
+            Matrix4 model = Matrix4.CreateScale(offsetC, offsetR, 0) * Matrix4.CreateTranslation(new(x, y, 0));
 
             foreach (char c in text)
             {
@@ -72,7 +73,7 @@ namespace CG_Kuerteil.Graphics
 
                 GL.BindVertexArray(charUnit.vertexArrayObject);
                 GL.DrawElements(PrimitiveType.Triangles, charUnit.Count, DrawElementsType.UnsignedInt, 0);
-                model *= Matrix4.CreateTranslation(new(offset, 0, 0));
+                model *= Matrix4.CreateTranslation(new(offsetC, 0, 0));
 
                 GL.Disable(EnableCap.Texture2D);
                 GL.Disable(EnableCap.Blend);
@@ -148,7 +149,7 @@ namespace CG_Kuerteil.Graphics
             return chars;
         }
 
-        private int FontSize = 150;
+        private int FontSize = 250;
         private string FontName = "Consolas";
         private Color TextColor = Color.White;
 
@@ -164,9 +165,9 @@ namespace CG_Kuerteil.Graphics
             Font myFont = new Font(FontName, FontSize); // fontsize = pixels
             PointF rect = new PointF(0, 0);
 
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixel;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.SmoothingMode = SmoothingMode.HighQuality;
 
             g.DrawString(c.ToString(), myFont, new SolidBrush(Color.White), rect);

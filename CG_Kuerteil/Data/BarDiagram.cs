@@ -49,6 +49,9 @@ namespace CG_Kuerteil.Data
 
                 offsetSpace += spacer;
             }
+
+            DataSeries = series;
+
         }
     }
 }

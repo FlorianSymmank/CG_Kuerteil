@@ -77,19 +77,49 @@ namespace CG_Kuerteil
 
             _diagramm?.Render();
 
-            // TODO: Change this
             _textRenderer.Rows = 20;
             _textRenderer.Columns = 20;
-            _textRenderer.RenderText(_diagramm.Title, 10 - (_diagramm.Title.Length / 2), 1);
+            _textRenderer.RenderText(_diagramm.Title, 10 - (_diagramm.Title.Length / 2), 1, Color4.Bisque);
 
             _textRenderer.Rows = 80;
             _textRenderer.Columns = 80;
             string fps = string.Format("fps: {0:0.00}", 1 / e.Time);
             _textRenderer.RenderText(fps, 0, 0);
 
-            _textRenderer.RenderText($"123 ABC abc #*/ ±¿ß {(char)254}", 0, 79);
+            RenderTextLegend();
 
             SwapBuffers();
+        }
+
+        private void RenderTextLegend()
+        {
+            int seriesCount = _diagramm.DataSeries.Count;
+            int datapointsPerSeries = _diagramm.DataSeries[0].dataPoints.Count;
+
+            int rowsToBeRendered = seriesCount * datapointsPerSeries + seriesCount * 2 + 1;
+
+            _textRenderer.Rows = rowsToBeRendered * 3;
+            _textRenderer.Columns = 60;
+
+            int row = _textRenderer.Rows - rowsToBeRendered;
+
+            _textRenderer.RenderText("Legende:", 0, row);
+            row++;
+
+            foreach (Series s in _diagramm.DataSeries)
+            {
+                _textRenderer.RenderText($"Series: {s.Description}", 0, row, s.Color);
+                row++;
+
+                foreach (DataPoint dp in s.dataPoints)
+                {
+                    _textRenderer.RenderText($"Title: {dp.Title} Value: {dp.Value}", 0, row, dp.Color);
+                    row++;
+                }
+
+                _textRenderer.RenderText("", 0, row, s.Color);
+                row++;
+            }
         }
 
         protected override void OnResize(ResizeEventArgs e)
