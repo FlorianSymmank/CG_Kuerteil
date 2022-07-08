@@ -51,6 +51,7 @@ namespace CG_Kuerteil.Data
             }
 
             DataSeries = series;
+            AddRotation(Direction.Y, (float)Math.PI);
         }
     }
 }
