@@ -94,12 +94,15 @@ namespace CG_Kuerteil
         private void RenderTextLegend()
         {
             int seriesCount = _diagramm.DataSeries.Count;
+
+            if (seriesCount <= 0) return;
+
             int datapointsPerSeries = _diagramm.DataSeries[0].dataPoints.Count;
 
             int rowsToBeRendered = seriesCount * datapointsPerSeries + seriesCount * 2 + 1;
 
             _textRenderer.Rows = rowsToBeRendered * 3;
-            _textRenderer.Columns = 60;
+            _textRenderer.Columns = rowsToBeRendered * 4;
 
             int row = _textRenderer.Rows - rowsToBeRendered;
 

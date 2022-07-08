@@ -23,7 +23,7 @@ namespace CG_Kuerteil.Data
 
             if (series[0].HasNegativeValues)
             {
-                Logger.Log(Logger.LogLevel.Warn, "Negative numbers are not supported byPieDiagramm.");
+                Logger.Log(Logger.LogLevel.Warn, "Negative values are not supported by PieDiagramm.");
                 return;
             }
 

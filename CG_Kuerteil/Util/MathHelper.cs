@@ -11,5 +11,13 @@
         {
             return radius * (float)Math.Sin(OpenTK.Mathematics.MathHelper.DegreesToRadians(angle));
         }
+
+        public static float Max(float[] values)
+        {
+            float max = 0;
+            for (int i = 0; i < values.Length; i++)
+                max = Math.Max(max, values[i]);
+            return max;
+        }
     }
 }
