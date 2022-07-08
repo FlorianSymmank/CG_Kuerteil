@@ -27,7 +27,7 @@ namespace CG_Kuerteil.Graphics
             1, 2, 3
         };
 
-        private Dictionary<char, CharUnit> chars = new Dictionary<char, CharUnit>();
+        private IDictionary<char, CharUnit> chars = new Dictionary<char, CharUnit>();
 
         public TextRenderer()
         {
@@ -38,6 +38,11 @@ namespace CG_Kuerteil.Graphics
         public int Rows = 80;
 
         public void RenderText(string text, int column = 0, int row = 0)
+        {
+            RenderText(text, column, row, Color4.White);
+        }
+
+        public void RenderText(string text, int column, int row, Color4 color)
         {
             row += 1;
 
@@ -60,6 +65,7 @@ namespace CG_Kuerteil.Graphics
                 GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
                 shader.SetInt("mode", 2);
+                shader.SetVector4("objectColor", (Vector4)color);
                 shader.SetMatrix4("model", model);
                 shader.SetMatrix4("view", Matrix4.Identity);
                 shader.SetMatrix4("projection", Matrix4.Identity);
@@ -74,11 +80,11 @@ namespace CG_Kuerteil.Graphics
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen", Justification = "<Ausstehend>")]
-        private Dictionary<char, CharUnit> initializeChars()
+        private IDictionary<char, CharUnit> initializeChars()
         {
             Shader _shader = Register.GetRegister().Get<Shader>();
 
-            Dictionary<char, CharUnit> chars = new Dictionary<char, CharUnit>();
+            IDictionary<char, CharUnit> chars = new Dictionary<char, CharUnit>();
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Available Chars:");
@@ -144,7 +150,7 @@ namespace CG_Kuerteil.Graphics
 
         private int FontSize = 150;
         private string FontName = "Consolas";
-        private Color TextColor = Color.Green;
+        private Color TextColor = Color.White;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen", Justification = "<Ausstehend>")]
         private Bitmap createCharBMP(char c)
@@ -163,7 +169,7 @@ namespace CG_Kuerteil.Graphics
             //g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.SmoothingMode = SmoothingMode.HighQuality;
 
-            g.DrawString(c.ToString(), myFont, new SolidBrush(TextColor), rect);
+            g.DrawString(c.ToString(), myFont, new SolidBrush(Color.White), rect);
 
             return bmp;
         }

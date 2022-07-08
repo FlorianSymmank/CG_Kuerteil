@@ -41,9 +41,9 @@ namespace CG_Kuerteil.Util
             registerDict.Remove(typeof(T));
         }
 
-        public void RegisterObject(Object a)
+        public void RegisterObject(Object obj)
         {
-            registerDict.Add(a.GetType(), a);
+            registerDict.Add(obj.GetType(), obj);
         }
 
         public T Get<T>()

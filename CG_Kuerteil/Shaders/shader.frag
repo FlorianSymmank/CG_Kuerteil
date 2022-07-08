@@ -40,7 +40,7 @@ void main()
     }
 
     if(mode == 2){
-        FragColor = texture(texture0, texCoord);
+        FragColor = texture(texture0, texCoord) * objectColor;
     }
     
 }
