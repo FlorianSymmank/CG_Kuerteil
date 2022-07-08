@@ -15,7 +15,7 @@ namespace CG_Kuerteil
             var nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new Vector2i(800, 600),
-                Title = "LearnOpenTK - Creating a Window",
+                Title = "CG-Kürteil 2022 3D-Diagramme Florian Symmank 578767",
                 // This is needed to run on macos
                 Flags = ContextFlags.ForwardCompatible,
 
@@ -24,14 +24,22 @@ namespace CG_Kuerteil
             // To create a new window, create a class that extends GameWindow, then call Run() on it.
             using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))
             {
+
                 window.OnLoaded += AddDiagramm;
+                window.IsVisible = false;
                 window.Run();
             }
         }
 
         private static void AddDiagramm(Window window)
         {
-            Diagramm d = new BarDiagram("Bar diagramm", "Description");
+            Console.WriteLine("1: PieDiagramm, 2:BarDiagramm, 3:StackBarDiagramm");
+            Diagramm d = Console.ReadLine() switch
+            {
+                "2" => new BarDiagram("BarDiagram", "Description"),
+                "3" => new StackBarDiagramm("StackBarDiagramm", "Description"),
+                _ => new PieDiagram("PieDiagramm", "Description"),
+            };
 
             Series series = new()
             {
@@ -40,9 +48,9 @@ namespace CG_Kuerteil
             };
             series.AddDataPoint(new(1, createColor()) { Title = "Series 1, Datapoint 1" });
             series.AddDataPoint(new(1, createColor()) { Title = "Series 1, Datapoint 2" });
-            series.AddDataPoint(new(20, createColor()) { Title = "Series 1, Datapoint 3" });
-            series.AddDataPoint(new(20, createColor()) { Title = "Series 1, Datapoint 4" });
-            series.AddDataPoint(new(20, createColor()) { Title = "Series 1, Datapoint 4" });
+            series.AddDataPoint(new(5, createColor()) { Title = "Series 1, Datapoint 3" });
+            series.AddDataPoint(new(9, createColor()) { Title = "Series 1, Datapoint 4" });
+            series.AddDataPoint(new(14, createColor()) { Title = "Series 1, Datapoint 4" });
 
 
             Series series2 = new()
@@ -54,8 +62,8 @@ namespace CG_Kuerteil
             series2.AddDataPoint(new(19, createColor()) { Title = "Series 2, Datapoint 1" });
             series2.AddDataPoint(new(0, createColor()) { Title = "Series 2, Datapoint 2" });
             series2.AddDataPoint(new(5, createColor()) { Title = "Series 2, Datapoint 3" });
-            series2.AddDataPoint(new(20, createColor()) { Title = "Series 2, Datapoint 4" });
-            series2.AddDataPoint(new(20, createColor()) { Title = "Series 2, Datapoint 4" });
+            series2.AddDataPoint(new(4, createColor()) { Title = "Series 2, Datapoint 4" });
+            series2.AddDataPoint(new(9, createColor()) { Title = "Series 2, Datapoint 4" });
 
 
             Series series3 = new()
@@ -64,10 +72,10 @@ namespace CG_Kuerteil
                 Color = createColor(),
             };
 
-            series3.AddDataPoint(new(20, createColor()) { Title = "Series 3, Datapoint 1" });
+            series3.AddDataPoint(new(4, createColor()) { Title = "Series 3, Datapoint 1" });
             series3.AddDataPoint(new(13, createColor()) { Title = "Series 3, Datapoint 2" });
             series3.AddDataPoint(new(5, createColor()) { Title = "Series 3, Datapoint 3" });
-            series3.AddDataPoint(new(20, createColor()) { Title = "Series 3, Datapoint 4" });
+            series3.AddDataPoint(new(3, createColor()) { Title = "Series 3, Datapoint 4" });
             series3.AddDataPoint(new(20, createColor()) { Title = "Series 3, Datapoint 4" });
 
 
@@ -80,12 +88,14 @@ namespace CG_Kuerteil
             series4.AddDataPoint(new(20, createColor()) { Title = "Series 4, Datapoint 1" });
             series4.AddDataPoint(new(13, createColor()) { Title = "Series 4, Datapoint 2" });
             series4.AddDataPoint(new(5, createColor()) { Title = "Series 4, Datapoint 3" });
-            series4.AddDataPoint(new(20, createColor()) { Title = "Series 4, Datapoint 4" });
-            series4.AddDataPoint(new(20, createColor()) { Title = "Series 4, Datapoint 4" });
+            series4.AddDataPoint(new(17, createColor()) { Title = "Series 4, Datapoint 4" });
+            series4.AddDataPoint(new(6, createColor()) { Title = "Series 4, Datapoint 4" });
 
 
             d.SetSeries(new List<Series>() { series, series2, series3/*, series4 */});
             window.SetDiagramm(d);
+            window.IsVisible = true;
+
         }
 
         private static Random rnd = new Random();

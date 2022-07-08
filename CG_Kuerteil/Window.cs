@@ -102,7 +102,7 @@ namespace CG_Kuerteil
             int rowsToBeRendered = seriesCount * datapointsPerSeries + seriesCount * 2 + 1;
 
             _textRenderer.Rows = rowsToBeRendered * 3;
-            _textRenderer.Columns = rowsToBeRendered * 4;
+            _textRenderer.Columns = rowsToBeRendered * 7;
 
             int row = _textRenderer.Rows - rowsToBeRendered;
 

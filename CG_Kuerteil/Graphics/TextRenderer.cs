@@ -145,7 +145,7 @@ namespace CG_Kuerteil.Graphics
                 sb.AppendLine($"{c} {i}");
             }
 
-            Logger.Log(sb.ToString());
+            //Logger.Log(sb.ToString());
             return chars;
         }
 
