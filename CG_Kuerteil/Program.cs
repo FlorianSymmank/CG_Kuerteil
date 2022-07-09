@@ -8,12 +8,15 @@ namespace CG_Kuerteil
 {
     public static class Program
     {
+        /* Tutorial: https://opentk.net/learn/index.html
+           Shader.cs, Camera.cs, shader.frag und shader.vert mit geringen Änderungen übernommen */
+
         public static void Main()
         {
             Logger.Log(Logger.LogLevel.Info, "Application Started");
             var nativeWindowSettings = new NativeWindowSettings()
             {
-                Size = new Vector2i(800, 600),
+                Size = new Vector2i(1920, 1080),
                 Title = "CG-Kürteil 2022 3D-Diagramme Florian Symmank 578767",
                 Flags = ContextFlags.ForwardCompatible,
 

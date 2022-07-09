@@ -9,7 +9,6 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace CG_Kuerteil
 {
-    // Tutorial https://opentk.net/learn/index.html
     public class Window : GameWindow
     {
         private Shader _shader;
