@@ -9,16 +9,8 @@
             Error,
             Fatal
         }
-
-        public static void Log(string text)
-        {
-            writeLog(LogLevel.Info, text);
-        }
-        public static void Log(LogLevel logLevel, string text)
-        {
-            writeLog(logLevel, text);
-        }
-
+        public static void Log(string text) => writeLog(LogLevel.Info, text);
+        public static void Log(LogLevel logLevel, string text) => writeLog(logLevel, text);
         private static void writeLog(LogLevel logLevel, string text)
         {
             switch (logLevel)
@@ -36,11 +28,8 @@
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
             }
-
             Console.WriteLine($"Date: {DateTime.Now} | LogLevel: {logLevel} | Message: {text}");
-
             Console.ResetColor();
         }
-
     }
 }

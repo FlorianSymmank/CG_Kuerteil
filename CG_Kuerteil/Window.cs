@@ -13,28 +13,17 @@ namespace CG_Kuerteil
     public class Window : GameWindow
     {
         private Shader _shader;
-
         private Camera _camera;
-
         private bool _firstMove = true;
-
         private Vector2 _lastPos;
-
         private Diagramm _diagramm;
         private TextRenderer _textRenderer;
-
         public delegate void Notify(Window window);
         public event Notify OnLoaded;
-
-        public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
-            : base(gameWindowSettings, nativeWindowSettings)
-        {
-            Logger.Log("Create Window");
-        }
+        public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) => Logger.Log("Create Window");
         protected override void OnLoad()
         {
             Logger.Log("Load Window");
-
             base.OnLoad();
 
             // set BackgroundColor
@@ -60,12 +49,7 @@ namespace CG_Kuerteil
 
             OnLoaded?.Invoke(this);
         }
-
-        public void SetDiagramm(Diagramm diagramm)
-        {
-            _diagramm = diagramm;
-        }
-
+        public void SetDiagramm(Diagramm diagramm) => _diagramm = diagramm;
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
@@ -90,7 +74,6 @@ namespace CG_Kuerteil
 
             SwapBuffers();
         }
-
         private void RenderTextLegend()
         {
             int seriesCount = _diagramm.DataSeries.Count;
@@ -124,13 +107,11 @@ namespace CG_Kuerteil
                 row++;
             }
         }
-
         protected override void OnResize(ResizeEventArgs e)
         {
             base.OnResize(e);
             GL.Viewport(0, 0, Size.X, Size.Y);
         }
-
         protected override void OnUnload()
         {
             // Unbind all the resources by binding the targets to 0/null.
@@ -144,13 +125,11 @@ namespace CG_Kuerteil
 
             base.OnUnload();
         }
-
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
 
-            if (!IsFocused)
-                return;
+            if (!IsFocused) return;
 
             if (KeyboardState.IsKeyDown(Keys.Escape))
             {
@@ -163,7 +142,7 @@ namespace CG_Kuerteil
             // Get the mouse state
             var mouse = MouseState;
 
-            if (_firstMove) // This bool variable is initially set to true.
+            if (_firstMove)
             {
                 _lastPos = new Vector2(mouse.X, mouse.Y);
                 _firstMove = false;
@@ -180,20 +159,13 @@ namespace CG_Kuerteil
 
             _lastPos = new Vector2(mouse.X, mouse.Y);
 
-            if (KeyboardState.IsKeyDown(Keys.Up))
-                _diagramm?.AddRotation(Container.Direction.X, -sensitivity);
-            if (KeyboardState.IsKeyDown(Keys.Down))
-                _diagramm?.AddRotation(Container.Direction.X, sensitivity);
+            if (KeyboardState.IsKeyDown(Keys.Up)) _diagramm?.AddRotation(Container.Direction.X, -sensitivity);
+            if (KeyboardState.IsKeyDown(Keys.Down)) _diagramm?.AddRotation(Container.Direction.X, sensitivity);
 
-            if (KeyboardState.IsKeyDown(Keys.Left))
-                _diagramm?.AddRotation(Container.Direction.Y, -sensitivity);
+            if (KeyboardState.IsKeyDown(Keys.Left)) _diagramm?.AddRotation(Container.Direction.Y, -sensitivity);
 
-            if (KeyboardState.IsKeyDown(Keys.Right))
-                _diagramm?.AddRotation(Container.Direction.Y, sensitivity);
+            if (KeyboardState.IsKeyDown(Keys.Right)) _diagramm?.AddRotation(Container.Direction.Y, sensitivity);
         }
-
-        // In the mouse wheel function, we manage all the zooming of the camera.
-        // This is simply done by changing the FOV of the camera.
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);

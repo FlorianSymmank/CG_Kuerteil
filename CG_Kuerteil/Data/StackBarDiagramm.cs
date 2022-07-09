@@ -1,11 +1,6 @@
 ﻿using CG_Kuerteil.Graphics;
 using CG_Kuerteil.Util;
 using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MathHelper = CG_Kuerteil.Util.MathHelper;
 
 namespace CG_Kuerteil.Data
@@ -57,41 +52,18 @@ namespace CG_Kuerteil.Data
                     DataPoint dp = s[i];
                     Vector3 scale = new(width, dp.Value / range, width);
                     Vector3 pos = new(offsetSpace, scale.Y / 2 + yOff, 0);
-
-                    Base3DObject base3dobject = new Cube(this)
-                    {
-                        Color = dp.Color,
-                        Scale = scale,
-                        Position = pos,
-                    };
-
-                    Base3DObjects.Add(base3dobject);
+                    Base3DObjects.Add(new Cube(this) { Color = dp.Color, Scale = scale, Position = pos });
                     yOff += dp.Value / range;
                 }
-
-
                 offsetSpace += width + spacer;
             }
 
             // Percentage bars
             float percentageIndicator25 = maxmax / range / 4;
             for (int i = 1; i < 5; i++)
-            {
-                float y = i * percentageIndicator25;
-                Base3DObjects.Add(new Cube(this)
-                {
-                    Color = Color4.Gray,
-                    Scale = new(offsetSpace + offsetSpace * 0.55f, 0.001f, 0.001f),
-                    Position = new(0, y, 0),
-                });
-            }
+                Base3DObjects.Add(new Cube(this) { Color = Color4.Gray, Scale = new(offsetSpace + offsetSpace * 0.55f, 0.001f, 0.001f), Position = new(0, i * percentageIndicator25, 0), });
 
-            Base3DObjects.Add(new Cube(this)
-            {
-                Color = Color4.Black,
-                Scale = new(offsetSpace + offsetSpace * 0.55f, 0.001f, 0.001f),
-                Position = new(0, 0, 0),
-            });
+            Base3DObjects.Add(new Cube(this) { Color = Color4.Black, Scale = new(offsetSpace + offsetSpace * 0.55f, 0.001f, 0.001f), Position = new(0, 0, 0), });
 
             model *= Matrix4.CreateTranslation(0, -0.5f, 0);
             DataSeries = series;

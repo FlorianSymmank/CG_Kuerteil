@@ -8,9 +8,7 @@ namespace CG_Kuerteil.Graphics
     public class Shader
     {
         public readonly int Handle;
-
         private readonly Dictionary<string, int> _uniformLocations;
-
         public Shader(string vertPath, string fragPath)
         {
             // The vertex shader is responsible for moving around vertices, and uploading that data to the fragment shader.
@@ -75,7 +73,6 @@ namespace CG_Kuerteil.Graphics
                 _uniformLocations.Add(key, location);
             }
         }
-
         private static void CompileShader(int shader)
         {
             Logger.Log($"Compile Shader {shader}");
@@ -92,7 +89,6 @@ namespace CG_Kuerteil.Graphics
                 throw new Exception($"Error occurred whilst compiling Shader({shader}).\n\n{infoLog}");
             }
         }
-
         private static void LinkProgram(int program)
         {
             Logger.Log($"Link Program {program}");
@@ -108,20 +104,17 @@ namespace CG_Kuerteil.Graphics
                 throw new Exception($"Error occurred whilst linking Program({program})");
             }
         }
-
         // A wrapper function that enables the shader program.
         public void Use()
         {
             GL.UseProgram(Handle);
         }
-
         // The shader sources provided with this project use hardcoded layout(location)-s. If you want to do it dynamically,
         // you can omit the layout(location=X) lines in the vertex shader, and use this in VertexAttribPointer instead of the hardcoded values.
         public int GetAttribLocation(string attribName)
         {
             return GL.GetAttribLocation(Handle, attribName);
         }
-
         // Uniform setters
         // Uniforms are variables that can be set by user code, instead of reading them from the VBO.
         // You use VBOs for vertex-related data, and uniforms for almost everything else.
@@ -141,7 +134,6 @@ namespace CG_Kuerteil.Graphics
             GL.UseProgram(Handle);
             GL.Uniform1(_uniformLocations[name], data);
         }
-
         /// <summary>
         /// Set a uniform float on this shader.
         /// </summary>
@@ -152,7 +144,6 @@ namespace CG_Kuerteil.Graphics
             GL.UseProgram(Handle);
             GL.Uniform1(_uniformLocations[name], data);
         }
-
         /// <summary>
         /// Set a uniform Matrix4 on this shader
         /// </summary>
@@ -168,7 +159,6 @@ namespace CG_Kuerteil.Graphics
             GL.UseProgram(Handle);
             GL.UniformMatrix4(_uniformLocations[name], true, ref data);
         }
-
         /// <summary>
         /// Set a uniform Vector3 on this shader.
         /// </summary>
@@ -179,7 +169,6 @@ namespace CG_Kuerteil.Graphics
             GL.UseProgram(Handle);
             GL.Uniform3(_uniformLocations[name], data);
         }
-
         /// <summary>
         /// Set a uniform Vector4 on this shader.
         /// </summary>

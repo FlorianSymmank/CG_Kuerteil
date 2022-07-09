@@ -11,7 +11,6 @@ namespace CG_Kuerteil.Data
             Title = title;
             Description = description;
         }
-
         public override void SetSeries(List<Series> series)
         {
             Base3DObjects.Clear();
@@ -40,14 +39,9 @@ namespace CG_Kuerteil.Data
                 if (i == series[0].Count - 1 && angle + currRotation != 360)
                     angle += 360 - (angle + currRotation);
 
-                Slice s = new(this, angle)
-                {
-                    Color = dp.Color,
-                    RotationZ = currRotation,
-                };
+                Base3DObjects.Add(new Slice(this, angle) { Color = dp.Color, RotationZ = currRotation, });
 
                 currRotation += angle;
-                Base3DObjects.Add(s);
             }
 
             DataSeries = series;

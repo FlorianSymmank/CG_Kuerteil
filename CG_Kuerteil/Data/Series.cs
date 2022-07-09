@@ -1,5 +1,4 @@
 ﻿using OpenTK.Mathematics;
-using System.Collections;
 
 namespace CG_Kuerteil.Data
 {
@@ -13,20 +12,8 @@ namespace CG_Kuerteil.Data
         public bool HasNegativeValues => dataPoints.Any(x => x.Value < 0);
         public int Count => dataPoints.Count;
         public string Description { get; set; } = "";
-
-        public void AddDataPoint(DataPoint data)
-        {
-            dataPoints.Add(data);
-        }
-
-        public void RemoveDataPoints()
-        {
-            dataPoints.Clear();
-        }
-
-        public DataPoint this[int index]
-        {
-            get => dataPoints[index];
-        }
+        public void AddDataPoint(DataPoint data) => dataPoints.Add(data);
+        public void RemoveDataPoints() => dataPoints.Clear();
+        public DataPoint this[int index] => dataPoints[index];
     }
 }

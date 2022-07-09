@@ -5,22 +5,13 @@ namespace CG_Kuerteil.Graphics
     public class Container : Base3DObject
     {
         public List<Base3DObject> Base3DObjects = new();
-
-        public Container()
-        {
-
-        }
-
+        public Container() { }
         public Matrix4 model = Matrix4.Identity;
-
         public override void Render()
         {
             foreach (var obj in Base3DObjects)
-            {
                 obj.Render();
-            }
         }
-
         public override float RotationX
         {
             get => base.RotationX;
@@ -30,7 +21,6 @@ namespace CG_Kuerteil.Graphics
                 model *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(value));
             }
         }
-
         public override float RotationY
         {
             get => base.RotationY;
@@ -40,7 +30,6 @@ namespace CG_Kuerteil.Graphics
                 model *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(value));
             }
         }
-
         public override float RotationZ
         {
             get => base.RotationZ;
@@ -50,12 +39,7 @@ namespace CG_Kuerteil.Graphics
                 model *= Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(value));
             }
         }
-
-        public enum Direction
-        {
-            X, Y, Z
-        }
-
+        public enum Direction { X, Y, Z }
         public void AddRotation(Direction direction, float radian)
         {
             switch (direction)

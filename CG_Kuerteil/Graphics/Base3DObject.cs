@@ -12,12 +12,9 @@ namespace CG_Kuerteil.Graphics
         private Vector3 scale;
         protected Container? _parent;
         protected int vertexCount = 0;
-
         public Vector3 Position { get => position; set => position = value; }
         public Vector3 Scale { get => scale; set => scale = value; }
-
         private float rotationX = 0f;
-
         public virtual float RotationX
         {
             get => OpenTK.Mathematics.MathHelper.DegreesToRadians(rotationX);
@@ -26,9 +23,7 @@ namespace CG_Kuerteil.Graphics
                 rotationX = value % 360;
             }
         }
-
         private float rotationY = 0f;
-
         public virtual float RotationY
         {
             get => OpenTK.Mathematics.MathHelper.DegreesToRadians(rotationY);
@@ -37,9 +32,7 @@ namespace CG_Kuerteil.Graphics
                 rotationY = value % 360;
             }
         }
-
         private float rotationZ = 0f;
-
         public virtual float RotationZ
         {
             get => OpenTK.Mathematics.MathHelper.DegreesToRadians(rotationZ);
@@ -48,9 +41,7 @@ namespace CG_Kuerteil.Graphics
                 rotationZ = value % 360;
             }
         }
-
         public Color4 Color { get => color; set => color = value; }
-
         public virtual void Render()
         {
             Shader shader = Register.GetRegister().Get<Shader>();
@@ -71,7 +62,6 @@ namespace CG_Kuerteil.Graphics
             GL.BindVertexArray(vertexArrayID);
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertexCount);
         }
-
         protected void RegisterArray(float[] vertices, int vertexCount)
         {
             Shader shader = Register.GetRegister().Get<Shader>();

@@ -1,7 +1,6 @@
 ﻿using CG_Kuerteil.Graphics;
 using OpenTK.Mathematics;
 
-
 namespace CG_Kuerteil.Data
 {
     public class BarDiagram : Diagramm
@@ -11,7 +10,6 @@ namespace CG_Kuerteil.Data
             Title = title;
             Description = description;
         }
-
         public override void SetSeries(List<Series> series)
         {
             Base3DObjects.Clear();
@@ -40,19 +38,10 @@ namespace CG_Kuerteil.Data
                 foreach (Series s in series)
                 {
                     DataPoint dp = s[i];
-
                     Vector3 scale = new(width, dp.Value / range, width);
                     Vector3 pos = new(offsetSpace, scale.Y / 2, 0);
                     offsetSpace += width;
-
-                    Base3DObject base3dobject = new Cube(this)
-                    {
-                        Color = dp.Color,
-                        Scale = scale,
-                        Position = pos,
-                    };
-
-                    Base3DObjects.Add(base3dobject);
+                    Base3DObjects.Add(new Cube(this) { Color = dp.Color, Scale = scale, Position = pos, });
                 }
 
                 offsetSpace += spacer;
@@ -61,37 +50,16 @@ namespace CG_Kuerteil.Data
             // Percentage bars
             float percentageIndicator25 = maxmax / range / 4;
             for (int i = 1; i < 5; i++)
-            {
-                float y = i * percentageIndicator25;
-                Base3DObjects.Add(new Cube(this)
-                {
-                    Color = Color4.Gray,
-                    Scale = new(len * 1.1f, 0.001f, 0.001f),
-                    Position = new(0, y, 0),
-                });
-            }
+                Base3DObjects.Add(new Cube(this) { Color = Color4.Gray, Scale = new(len * 1.1f, 0.001f, 0.001f), Position = new(0, i * percentageIndicator25, 0), });
+
 
             if (min < 0)
                 for (int i = -1; i > -5; i--)
-                {
-                    float y = i * percentageIndicator25;
-                    Base3DObjects.Add(new Cube(this)
-                    {
-                        Color = Color4.Gray,
-                        Scale = new(len * 1.1f, 0.001f, 0.001f),
-                        Position = new(0, y, 0),
-                    });
-                }
+                    Base3DObjects.Add(new Cube(this) { Color = Color4.Gray, Scale = new(len * 1.1f, 0.001f, 0.001f), Position = new(0, i * percentageIndicator25, 0), });
             else
                 model *= Matrix4.CreateTranslation(0, -0.5f, 0);
 
-
-            Base3DObjects.Add(new Cube(this)
-            {
-                Color = Color4.Black,
-                Scale = new(len * 1.1f, 0.001f, 0.001f),
-                Position = new(0, 0, 0),
-            });
+            Base3DObjects.Add(new Cube(this) { Color = Color4.Black, Scale = new(len * 1.1f, 0.001f, 0.001f), Position = new(0, 0, 0), });
 
             DataSeries = series;
         }

@@ -7,7 +7,6 @@ namespace CG_Kuerteil.Graphics
     public class Slice : Base3DObject
     {
         public readonly int Angle;
-
         public Slice(Container parent, int angle)
         {
             CreateSlice(angle);
@@ -17,7 +16,6 @@ namespace CG_Kuerteil.Graphics
             _parent = parent;
             Scale = Vector3.One;
         }
-
         private int offsetID = 0;
         private int OffsetID => offsetID++;
         private void CreateSlice(int angle)
@@ -77,8 +75,6 @@ namespace CG_Kuerteil.Graphics
                 sliceVertices[i * offset + OffsetID] = 0f; // Y 
                 sliceVertices[i * offset + OffsetID] = 1f; // z
 
-
-
                 // Back Face
                 // center
                 sliceVertices[i * offset + OffsetID] = 0f; // X
@@ -109,8 +105,6 @@ namespace CG_Kuerteil.Graphics
                 sliceVertices[i * offset + OffsetID] = 0f; // X
                 sliceVertices[i * offset + OffsetID] = 0f; // Y 
                 sliceVertices[i * offset + OffsetID] = -1f; // z
-
-
 
                 // Right Face 1
                 // vertex
@@ -146,7 +140,6 @@ namespace CG_Kuerteil.Graphics
                 sliceVertices[i * offset + OffsetID] = normal.X; // X
                 sliceVertices[i * offset + OffsetID] = normal.Y; // Y 
                 sliceVertices[i * offset + OffsetID] = 0f; // z
-
 
                 // Right Face 2
                 // vertex

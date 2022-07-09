@@ -11,37 +11,20 @@ namespace CG_Kuerteil.Graphics
 {
     public class TextRenderer
     {
-
         private static readonly float[] _vertices =
-       {
+        {
             // Position     Texture coordinates
              0f,  0f, 0.0f, 0.0f, 1.0f,
              0f,  1f, 0.0f, 0.0f, 0.0f,
              1f,  1f, 0.0f, 1.0f, 0.0f,
              1f,  0f, 0.0f, 1.0f, 1.0f
         };
-
-        private static readonly uint[] _indices =
-        {
-            0, 1, 3,
-            1, 2, 3
-        };
-
+        private static readonly uint[] _indices = { 0, 1, 3, 1, 2, 3 };
         private IDictionary<char, CharUnit> chars = new Dictionary<char, CharUnit>();
-
-        public TextRenderer()
-        {
-            chars = initializeChars();
-        }
-
+        public TextRenderer() => chars = initializeChars();
         public int Columns = 80;
         public int Rows = 80;
-
-        public void RenderText(string text, int column = 0, int row = 0)
-        {
-            RenderText(text, column, row, Color4.White);
-        }
-
+        public void RenderText(string text, int column = 0, int row = 0) => RenderText(text, column, row, Color4.White);
         public void RenderText(string text, int column, int row, Color4 color)
         {
             row += 1;
@@ -79,7 +62,6 @@ namespace CG_Kuerteil.Graphics
                 GL.Disable(EnableCap.Blend);
             }
         }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen", Justification = "<Ausstehend>")]
         private IDictionary<char, CharUnit> initializeChars()
         {
@@ -133,26 +115,17 @@ namespace CG_Kuerteil.Graphics
                 GL.EnableVertexAttribArray(texCoordLocation);
                 GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-                CharUnit charUnit = new CharUnit()
-                {
-                    Char = c,
-                    vertexArrayObject = _vertexArrayObject,
-                    Count = _vertices.Length,
-                    Handle = handle
-                };
+                CharUnit charUnit = new CharUnit() { Char = c, vertexArrayObject = _vertexArrayObject, Count = _vertices.Length, Handle = handle };
 
                 chars.Add(c, charUnit);
                 sb.AppendLine($"{c} {i}");
             }
 
-            //Logger.Log(sb.ToString());
             return chars;
         }
-
         private int FontSize = 250;
         private string FontName = "Consolas";
         private Color TextColor = Color.White;
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen", Justification = "<Ausstehend>")]
         private Bitmap createCharBMP(char c)
         {

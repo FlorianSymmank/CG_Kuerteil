@@ -14,7 +14,6 @@ namespace CG_Kuerteil.Graphics
                 shader.SetVector4("lightColor", (Vector4)color);
             }
         }
-
         private Vector3 position;
         public Vector3 Position
         {
@@ -25,14 +24,12 @@ namespace CG_Kuerteil.Graphics
                 shader.SetVector3("lightPos", position);
             }
         }
-
         private Shader shader;
         public Light(Vector3 pos, Shader shader, Camera camera, Color4 color)
         {
             this.shader = shader;
             Position = pos;
             Color = color;
-
             shader.SetVector3("viewPos", camera.Position);
         }
     }

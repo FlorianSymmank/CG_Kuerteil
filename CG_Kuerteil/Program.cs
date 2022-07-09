@@ -11,26 +11,20 @@ namespace CG_Kuerteil
         public static void Main()
         {
             Logger.Log(Logger.LogLevel.Info, "Application Started");
-
             var nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new Vector2i(800, 600),
                 Title = "CG-Kürteil 2022 3D-Diagramme Florian Symmank 578767",
-                // This is needed to run on macos
                 Flags = ContextFlags.ForwardCompatible,
 
             };
-
-            // To create a new window, create a class that extends GameWindow, then call Run() on it.
             using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))
             {
-
                 window.OnLoaded += AddDiagramm;
                 window.IsVisible = false;
                 window.Run();
             }
         }
-
         private static void AddDiagramm(Window window)
         {
             Console.WriteLine("1: PieDiagramm, 2:BarDiagramm, 3:StackBarDiagramm");
@@ -65,7 +59,6 @@ namespace CG_Kuerteil
             series2.AddDataPoint(new(4, createColor()) { Title = "Series 2, Datapoint 4" });
             series2.AddDataPoint(new(9, createColor()) { Title = "Series 2, Datapoint 4" });
 
-
             Series series3 = new()
             {
                 Description = "Description 3",
@@ -77,7 +70,6 @@ namespace CG_Kuerteil
             series3.AddDataPoint(new(5, createColor()) { Title = "Series 3, Datapoint 3" });
             series3.AddDataPoint(new(3, createColor()) { Title = "Series 3, Datapoint 4" });
             series3.AddDataPoint(new(20, createColor()) { Title = "Series 3, Datapoint 4" });
-
 
             Series series4 = new()
             {
@@ -91,18 +83,11 @@ namespace CG_Kuerteil
             series4.AddDataPoint(new(17, createColor()) { Title = "Series 4, Datapoint 4" });
             series4.AddDataPoint(new(6, createColor()) { Title = "Series 4, Datapoint 4" });
 
-
             d.SetSeries(new List<Series>() { series, series2, series3/*, series4 */});
             window.SetDiagramm(d);
             window.IsVisible = true;
-
         }
-
         private static Random rnd = new Random();
-
-        private static Color4 createColor()
-        {
-            return new Color4((float)rnd.NextDouble(), (float)rnd.NextDouble(), (float)rnd.NextDouble(), 255);
-        }
+        private static Color4 createColor() => new Color4((float)rnd.NextDouble(), (float)rnd.NextDouble(), (float)rnd.NextDouble(), 255);
     }
 }

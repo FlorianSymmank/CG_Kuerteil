@@ -8,10 +8,6 @@ namespace CG_Kuerteil.Data
         public string Title { get; set; } = "";
         public string Description { get; set; } = "";
         public abstract void SetSeries(List<Series> series);
-
-        public void RemoveAllSeries()
-        {
-            Base3DObjects.Clear();
-        }
+        public void RemoveAllSeries() => DataSeries.Clear();
     }
 }
