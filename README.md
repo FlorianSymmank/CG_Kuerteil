@@ -18,7 +18,7 @@ BarDiagramm stellt mehrere Serien und ihre Datenpunkte gruppiert nebeneinander d
 
 ![](BarDiagramm.png)
 
-## StackBardDiagramm
-StackBardDiagramm stellt die Datenpunkte mehrerer Serien gruppiert übereinander dar.
+## StackBarDiagramm
+StackBarDiagramm stellt die Datenpunkte mehrerer Serien gruppiert übereinander dar.
 
 ![](StackBarDiagramm.png)
