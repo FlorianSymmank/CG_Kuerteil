@@ -4,7 +4,7 @@
 - OpenGL via OpenTK 4.7.2
 - Tutorial: https://opentk.net/learn/index.html (Shader.cs, Camera.cs, shader.frag und shader.vert mit geringen Änderungen übernommen)
 - GitHub: https://github.com/FlorianSymmank/CG_Kuerteil
-- Showcase: https://youtu.be/5rJ6pEr346g
+- Showcase: https://youtu.be/5rJ6pEr346g / [a relative link](showcase.mp4)
 
 ## Funktionen: 3 Diagrammtypen  
 3D Darstellung verschiedener Diagrammarten: PieDiagramm, BarDiagramm, StackBardDiagramm
